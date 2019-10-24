@@ -24,11 +24,15 @@ void * Stack::alloc(size_t size)
 
 Marker Stack::getMarker()
 {
-	return Marker();
+	return this->top;
 }
 
 void Stack::freeToMarker(Marker marker)
 {
+	if (marker > this->top) {
+		throw "error, marker is not valid";
+	}
+	this->top = marker;
 }
 
 void Stack::clear()

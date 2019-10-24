@@ -7,13 +7,30 @@
 
 using namespace std;
 
+struct Vertex {
+	float x;
+	float y;
+	float z;
+};
+
 int main()
 {
+	//stack tests
 	void * memory = malloc(100);
 	Stack st(100, memory);
 	int * p = (int *)st.alloc(sizeof(int));
 	*p = 1;
-	cout << p << endl;
+	Marker beforeVert = st.getMarker();
+	Vertex * vert = (Vertex *)st.alloc(sizeof(Vertex));
+	*vert = Vertex{ 1.0, 2.0, 3.0 };
+	Marker afterVert = st.getMarker();
+	cout << *p << endl;
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+	st.freeToMarker(beforeVert);
+	Vertex * newVert = (Vertex*)st.alloc(sizeof(Vertex));
+	*newVert = Vertex{ 1.0, 1.0, 1.0 };
+	cout << "after deallocation and reallocation" << endl;
+	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
