@@ -3,10 +3,17 @@
 
 #include "pch.h"
 #include <iostream>
+#include "Stack.h"
+
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	void * memory = malloc(100);
+	Stack st(100, memory);
+	int * p = (int *)st.alloc(sizeof(int));
+	*p = 1;
+	cout << p << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
