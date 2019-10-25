@@ -70,6 +70,10 @@ int main()
 	cout << "vertex d: " << vertd->x << " " << vertd->y << " " << vertd->z << endl;
 
 	dst.clear();
+
+	void * memorypool = malloc(100);
+
+
 	
 	return 0;
 }
