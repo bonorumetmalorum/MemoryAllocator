@@ -18,7 +18,7 @@ struct Vertex {
 int main()
 {
 	//stack tests
-	/*void * memory = malloc(100);
+	void * memory = malloc(100);
 	Stack st(100, memory);
 	int * p = (int *)st.alloc(sizeof(int));
 	*p = 1;
@@ -32,7 +32,8 @@ int main()
 	Vertex * newVert = (Vertex*)st.alloc(sizeof(Vertex));
 	*newVert = Vertex{ 1.0, 1.0, 1.0 };
 	cout << "after deallocation and reallocation" << endl;
-	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;*/
+	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;
+
 	//double ended stack test
 	void * memoryDS = malloc(100);
 	DoubleEndedStack dst(100, memoryDS);
@@ -67,6 +68,8 @@ int main()
 
 	cout << "vertex c: " << vertc->x << " " << vertc->y << " " << vertc->z << endl;
 	cout << "vertex d: " << vertd->x << " " << vertd->y << " " << vertd->z << endl;
+
+	dst.clear();
 	
 	return 0;
 }
