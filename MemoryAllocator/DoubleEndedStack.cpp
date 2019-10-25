@@ -1,9 +1,14 @@
 #include "pch.h"
 #include "DoubleEndedStack.h"
+#include <malloc.h>
 
 
-DoubleEndedStack::DoubleEndedStack()
+DoubleEndedStack::DoubleEndedStack(size_t limit, void * memory)
 {
+	unsigned long long mem = reinterpret_cast<unsigned long long>(memory);
+	topTop = mem + limit;
+	bottomTop = mem;
+	this->memory = memory;
 }
 
 void * DoubleEndedStack::allocTop(size_t size)
@@ -12,8 +17,8 @@ void * DoubleEndedStack::allocTop(size_t size)
 		return nullptr;
 	}
 	else {
-		void * address = (void *)topTop;
 		topTop -= size + 1;
+		void * address = (void *)topTop;
 		return address;
 	}
 }
@@ -46,14 +51,18 @@ void DoubleEndedStack::freeToMarkerBottom(Marker marker)
 	bottomTop = marker;
 }
 
-void DoubleEndedStack::clear()
+Marker DoubleEndedStack::getMarkerTop()
 {
-	bottomTop = (unsigned long) memory;
-	topTop = ((unsigned long)memory) + limit;
+	return topTop;
 }
 
-
-DoubleEndedStack::~DoubleEndedStack()
+Marker DoubleEndedStack::getMarkerBottom()
 {
-	//TODO
+	return bottomTop;
+}
+
+void DoubleEndedStack::clear()
+{
+	bottomTop =  reinterpret_cast<Marker>(memory);
+	topTop = (reinterpret_cast<Marker>(memory)) + limit;
 }

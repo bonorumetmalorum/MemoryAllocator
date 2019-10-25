@@ -1,17 +1,18 @@
 #pragma once
 
-typedef unsigned long Marker;
+typedef unsigned long long Marker;
 
 class DoubleEndedStack
 {
 public:
-	DoubleEndedStack();
+	explicit DoubleEndedStack(size_t limit, void * memory);
 	void* allocTop(size_t size);
 	void* allocBottom(size_t size);
 	void freeToMarkerTop(Marker marker);
 	void freeToMarkerBottom(Marker marker);
+	Marker getMarkerTop();
+	Marker getMarkerBottom();
 	void clear();
-	~DoubleEndedStack();
 private:
 	size_t limit;
 	Marker topTop;

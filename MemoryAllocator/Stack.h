@@ -1,6 +1,6 @@
 #pragma once
 
-typedef unsigned long Marker;
+typedef unsigned long long Marker;
 
 class Stack
 {

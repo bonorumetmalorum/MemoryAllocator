@@ -4,6 +4,8 @@
 #include "pch.h"
 #include <iostream>
 #include "Stack.h"
+#include "DoubleEndedStack.h"
+#include <malloc.h>
 
 using namespace std;
 
@@ -16,7 +18,7 @@ struct Vertex {
 int main()
 {
 	//stack tests
-	void * memory = malloc(100);
+	/*void * memory = malloc(100);
 	Stack st(100, memory);
 	int * p = (int *)st.alloc(sizeof(int));
 	*p = 1;
@@ -30,16 +32,41 @@ int main()
 	Vertex * newVert = (Vertex*)st.alloc(sizeof(Vertex));
 	*newVert = Vertex{ 1.0, 1.0, 1.0 };
 	cout << "after deallocation and reallocation" << endl;
-	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;
+	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;*/
+	//double ended stack test
+	void * memoryDS = malloc(100);
+	DoubleEndedStack dst(100, memoryDS);
+	
+	int * inta = (int*)dst.allocBottom(sizeof(int));
+	*inta = 12;
+	Marker intaM = dst.getMarkerBottom();
+	int * intb = (int*)dst.allocTop(sizeof(int));
+	Marker intbM = dst.getMarkerTop();
+	Vertex * verta = (Vertex*)dst.allocBottom(sizeof(Vertex));
+	*verta = Vertex{ 1.0,1.0,1.0 };
+	Marker vertaM = dst.getMarkerBottom();
+	Vertex * vertb = (Vertex*)dst.allocTop(sizeof(Vertex));
+	*vertb = Vertex{ 2.0,2.0,2.0 };
+	Marker vertbM = dst.getMarkerTop();
+	
+	cout << "vertex a: " << verta->x << " " << verta->y << " " << verta->z << endl;
+	cout << "vertex b: " << vertb->x << " " << vertb->y << " " << vertb->z << endl;
+
+	dst.freeToMarkerBottom(intaM);
+	dst.freeToMarkerTop(intbM);
+	
+	Vertex * vertc = (Vertex*)dst.allocBottom(sizeof(Vertex));
+	*vertc = Vertex{ 5.0,15.0,15.0 };
+	Marker vertcM = dst.getMarkerBottom();
+	Vertex * vertd = (Vertex*)dst.allocTop(sizeof(Vertex));
+	*vertd = Vertex{ 23.0,23.0,23.0 };
+	Marker vertdM = dst.getMarkerTop();
+
+	cout << "vertex a: " << verta->x << " " << verta->y << " " << verta->z << endl;
+	cout << "vertex b: " << vertb->x << " " << vertb->y << " " << vertb->z << endl;
+
+	cout << "vertex c: " << vertc->x << " " << vertc->y << " " << vertc->z << endl;
+	cout << "vertex d: " << vertd->x << " " << vertd->y << " " << vertd->z << endl;
+	
+	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

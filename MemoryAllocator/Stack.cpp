@@ -7,22 +7,22 @@ Stack::Stack(size_t size, void* start)
 {
 	this->limit = size;
 	this->memory = start;
-	this->top = (unsigned long)start;
+	this->top = reinterpret_cast<uintptr_t>(start);
 }
 
 void * Stack::alloc(size_t size)
 {
-	if (top + size > (unsigned long)memory + limit) {
+	if (top + size > reinterpret_cast<Marker>(memory) + limit) {
 		return nullptr;
 	}
 	else {
-		void * address = (void *)top;
+		void * address = reinterpret_cast<void*>(top);
 		top += size + 1;
 		return address;
 	}
 }
 
-Marker Stack::getMarker()
+uintptr_t Stack::getMarker()
 {
 	return this->top;
 }
@@ -37,7 +37,7 @@ void Stack::freeToMarker(Marker marker)
 
 void Stack::clear()
 {
-	this->top = (unsigned long) memory;
+	this->top = reinterpret_cast<Marker>(memory);
 }
 
 Stack::~Stack()
