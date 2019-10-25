@@ -37,8 +37,10 @@ void Stack::freeToMarker(Marker marker)
 
 void Stack::clear()
 {
+	this->top = (unsigned long) memory;
 }
 
 Stack::~Stack()
 {
+	//TODO
 }
