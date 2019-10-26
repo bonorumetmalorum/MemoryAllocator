@@ -7,8 +7,9 @@ class Pool
 public:
 	Pool(size_t sizeOfElement, int numElements);
 	void * alloc();
-	void dealloc(Marker marker);
+	void dealloc(int index);
 	void clear();
+	void * operator[](int);
 	~Pool();
 private:
 	void * memory;

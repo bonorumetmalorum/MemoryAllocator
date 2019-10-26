@@ -6,7 +6,7 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 {
 	memory = malloc(sizeOfElement * numElements);
 	head = memory;
-	limit = reinterpret_cast<Marker>(head) + (sizeOfElement * numElements);
+	limit = (sizeOfElement * numElements);
 	this->sizeOfElement = sizeOfElement;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
 	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
@@ -22,17 +22,15 @@ void * Pool::alloc()
 	if (currentUsage + sizeOfElement > limit) {
 		return nullptr;
 	}
-	unsigned long long * nextFree = reinterpret_cast<unsigned long long*>(head);
-	void * address = head;
-	head = reinterpret_cast<void*>(*nextFree);
-	return address;
+	Marker nextFree = *(reinterpret_cast<Marker*>(head)); //next free block marker stored at head
+	void * newHead = reinterpret_cast<void*>(nextFree); //cat next free block marker to void *
+	void * address = head; // get the current address
+	head = newHead; // set the new head to the next free marker (casted above)
+	return address; // return the address
 }
 
-void Pool::dealloc(Marker marker)
+void Pool::dealloc(int index)
 {
-	if (marker > limit) {
-		throw "invalid marker";
-	}
 	Marker nextFree = reinterpret_cast<Marker>(head);
 	head = reinterpret_cast<void*>(marker);
 	Marker * newFirst = reinterpret_cast<Marker *>(head);
@@ -42,6 +40,13 @@ void Pool::dealloc(Marker marker)
 void Pool::clear()
 {
 	//TODO
+}
+
+void* Pool::operator[](int index)
+{
+	Marker baseAddress = reinterpret_cast<Marker>(memory);
+	Marker offset = baseAddress + this->sizeOfElement * index;
+	return reinterpret_cast<void*>(offset);
 }
 
 Pool::~Pool()

@@ -74,9 +74,15 @@ int main()
 
 	//pool allocator test
 
-	Pool pool(sizeof(Vertex), 35);
-
-
-	
+	Pool pool(sizeof(Vertex), 100);
+	for (int i = 0; i < 100; i++) {
+		Vertex* vert = (Vertex*)pool.alloc();
+		vert->x = i; vert->y = i; vert->z = i;
+	}
+	Vertex * vert;
+	for (int j = 0; j < 100; j++) {
+		vert = (Vertex *)pool[j];
+		cout << vert->x << " " << vert->y << " " << vert->z << endl;
+	}
 	return 0;
 }
