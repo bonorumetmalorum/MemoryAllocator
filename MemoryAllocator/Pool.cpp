@@ -5,8 +5,15 @@
 Pool::Pool(size_t sizeOfElement, int numElements)
 {
 	memory = malloc(sizeOfElement * numElements);
-	head = memory; 
-	//complete constructor, need to iterate through memory and assign free list :)
+	head = memory;
+	limit = sizeOfElement * numElements;
+	Marker * currentAddress = reinterpret_cast<Marker*>(head);
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + (sizeOfElement + 1);
+	for (int i = 1; i < numElements; i++) {
+		*currentAddress = nextFreeMarker;
+		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
+		nextFreeMarker += (sizeOfElement + 1);
+	}
 }
 
 void * Pool::alloc()
