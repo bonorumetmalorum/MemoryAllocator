@@ -74,7 +74,7 @@ int main()
 
 	//pool allocator test
 
-	Pool pool(sizeof(Vertex), 10);
+	Pool pool(sizeof(Vertex), 35);
 
 
 	

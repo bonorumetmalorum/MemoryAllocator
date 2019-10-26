@@ -6,13 +6,14 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 {
 	memory = malloc(sizeOfElement * numElements);
 	head = memory;
-	limit = sizeOfElement * numElements;
+	limit = reinterpret_cast<Marker>(head) + (sizeOfElement * numElements);
+	this->sizeOfElement = sizeOfElement;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
-	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + (sizeOfElement + 1);
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
 	for (int i = 1; i < numElements; i++) {
 		*currentAddress = nextFreeMarker;
 		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
-		nextFreeMarker += (sizeOfElement + 1);
+		nextFreeMarker += sizeOfElement;
 	}
 }
 
