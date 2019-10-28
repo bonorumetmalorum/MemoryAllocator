@@ -84,5 +84,9 @@ int main()
 		vert = (Vertex *)pool[j];
 		cout << vert->x << " " << vert->y << " " << vert->z << endl;
 	}
+	
+	pool.dealloc(0);
+	//deallocation of an unallocated memory cell = UB?
+	//allocation of an allocated memory cell = UB?
 	return 0;
 }
