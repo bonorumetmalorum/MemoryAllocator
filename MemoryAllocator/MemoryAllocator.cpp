@@ -87,5 +87,40 @@ int main()
 	}
 	
 	pool.dealloc(0);
+
+	Vertex * newVert = (Vertex*)pool.alloc();
+	*newVert = Vertex{ 5.0, 5.0, 5.0 };
+
+	Vertex * checkNewVert = (Vertex*)pool[0];
+	cout << "after deallocation and re allocation: " << checkNewVert->x << " " << checkNewVert->y << " " << checkNewVert->z << endl;
+
+	pool.dealloc(2);
+
+	Vertex * newVert2 = (Vertex*)pool.alloc();
+	*newVert2 = Vertex{ 5.0, 5.0, 5.0 };
+
+	Vertex * checkNewVert2 = (Vertex*)pool[2];
+	cout << "after deallocation and re allocation: " << checkNewVert2->x << " " << checkNewVert2->y << " " << checkNewVert2->z << endl;
+
+	//deallocate everything
+	for (int i = 0; i < 3; i++) {
+		pool.dealloc(i);
+	}
+
+	//allocate everything again
+	for (int i = 0; i < 3; i++) {
+		Vertex * x = (Vertex *)pool.alloc();
+		x->x = i;
+		x->y = i;
+		x->z = i;
+	}
+
+	//print everything again
+	cout << "after clearing pool manually" << endl;
+	for (int i = 0; i < 3; i++) {
+		Vertex * v = (Vertex *)pool[i];
+		cout << v->x << " " << v->y << " " << v->z << endl;
+	}
+
 	return 0;
 }
