@@ -10,9 +10,9 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 	this->sizeOfElement = sizeOfElement;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
 	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
-	for (int i = 1; i < numElements; i++) {
-		if (nextFreeMarker >= limit) {
-			*currentAddress = NULL;
+	for (int i = 0; i < numElements; i++) {
+		if (i == numElements-1) {
+			*currentAddress = 0;
 		}
 		else {
 			*currentAddress = nextFreeMarker;
@@ -29,18 +29,23 @@ void * Pool::alloc()
 		return nullptr;
 	}
 	Marker nextFree = *(reinterpret_cast<Marker*>(head)); //next free block marker stored at head
-	void * newHead = reinterpret_cast<void*>(nextFree); //cat next free block marker to void *
 	void * address = head; // get the current address
-	head = newHead; // set the new head to the next free marker (casted above)
+	if (nextFree == 0) {
+		head = 0;
+	}
+	else {
+		void * newHead = reinterpret_cast<void*>(nextFree); //cat next free block marker to void *
+		head = newHead; // set the new head to the next free marker (casted above)
+	}
 	return address; // return the address
 }
 
 void Pool::dealloc(int index)
 {
-	if (head == NULL) {
+	if (head == 0) {
 		Marker mem_address = (index * sizeOfElement) + reinterpret_cast<Marker>(memory); //get the memory address by applying the offset
 		head = reinterpret_cast<void*>(mem_address); // set the head to the deallocated address
-		*(reinterpret_cast<Marker*>(head)) = NULL; //add it to the free list by setting its next to NULL, since there was no more space except this one
+		*(reinterpret_cast<Marker*>(head)) = 0; //add it to the free list by setting its next to NULL, since there was no more space except this one
 	}
 	else {
 		Marker mem_address = (index * sizeOfElement) + reinterpret_cast<Marker>(memory); //get the memory address by applying the offset

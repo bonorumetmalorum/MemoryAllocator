@@ -74,19 +74,18 @@ int main()
 
 	//pool allocator test
 
-	Pool pool(sizeof(Vertex), 100);
-	for (int i = 0; i < 100; i++) {
+	Pool pool(sizeof(Vertex), 3);
+
+	for (int i = 0; i < 3; i++) {
 		Vertex* vert = (Vertex*)pool.alloc();
 		vert->x = i; vert->y = i; vert->z = i;
 	}
 	Vertex * vert;
-	for (int j = 0; j < 100; j++) {
+	for (int j = 0; j < 3; j++) {
 		vert = (Vertex *)pool[j];
 		cout << vert->x << " " << vert->y << " " << vert->z << endl;
 	}
 	
 	pool.dealloc(0);
-	//deallocation of an unallocated memory cell = UB?
-	//allocation of an allocated memory cell = UB?
 	return 0;
 }
