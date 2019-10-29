@@ -120,5 +120,9 @@ int main()
 		cout << v->x << " " << v->y << " " << v->z << endl;
 	}
 
+	//-----memory allocator container tests-----
+
+
+
 	return 0;
 }

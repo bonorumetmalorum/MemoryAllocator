@@ -23,7 +23,7 @@
     <ProjectGuid>{F605F62A-4D00-470D-B22B-42102EC3893E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MemoryAllocator</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -152,14 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DoubleEndedStack.h" />
-    <ClInclude Include="Memory.h" />
+    <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Stack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoubleEndedStack.cpp" />
-    <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
