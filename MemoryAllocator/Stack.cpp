@@ -22,7 +22,7 @@ void * Stack::alloc(size_t size)
 	}
 }
 
-uintptr_t Stack::getMarker()
+Marker Stack::getMarker()
 {
 	return this->top;
 }
