@@ -5,7 +5,7 @@ typedef unsigned long long Marker;
 class Stack
 {
 public:
-	explicit Stack(size_t size, void* start);
+	explicit Stack(size_t size);
 	void * alloc(size_t size); 
 	Marker getMarker();
 	void freeToMarker(Marker marker);

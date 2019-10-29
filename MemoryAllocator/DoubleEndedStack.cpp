@@ -3,12 +3,12 @@
 #include <malloc.h>
 
 
-DoubleEndedStack::DoubleEndedStack(size_t limit, void * memory)
+DoubleEndedStack::DoubleEndedStack(size_t limit)
 {
-	unsigned long long mem = reinterpret_cast<unsigned long long>(memory);
+	this->memory = malloc(limit);
+	Marker mem = reinterpret_cast<unsigned long long>(this->memory);
 	topTop = mem + limit;
 	bottomTop = mem;
-	this->memory = memory;
 }
 
 void * DoubleEndedStack::allocTop(size_t size)

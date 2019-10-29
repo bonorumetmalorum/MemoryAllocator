@@ -5,7 +5,7 @@ typedef unsigned long long Marker;
 class DoubleEndedStack
 {
 public:
-	explicit DoubleEndedStack(size_t limit, void * memory);
+	explicit DoubleEndedStack(size_t limit);
 	void* allocTop(size_t size);
 	void* allocBottom(size_t size);
 	void freeToMarkerTop(Marker marker);

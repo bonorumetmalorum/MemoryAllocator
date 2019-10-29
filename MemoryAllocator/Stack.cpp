@@ -3,11 +3,11 @@
 #include <memory>
 
 
-Stack::Stack(size_t size, void* start)
+Stack::Stack(size_t size)
 {
 	this->limit = size;
-	this->memory = start;
-	this->top = reinterpret_cast<uintptr_t>(start);
+	this->memory = malloc(size);
+	this->top = reinterpret_cast<uintptr_t>(this->memory);
 }
 
 void * Stack::alloc(size_t size)
