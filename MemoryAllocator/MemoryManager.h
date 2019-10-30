@@ -4,61 +4,35 @@
 #include "Pool.h"
 
 /*
-	there will be at any given time on management strategy
+	TODO: unify the allocators under a common interface
+	provide enum to allow for optional allocation parameters (e.g. double ended stack etc)
 
-	not making this a singleton global state object
-		this would make concurrency difficult
-		would add extra book keeping making this quite class quite large when it would be easier to have multiple MemoryManagers managing independently using different allocation strategies
-
-	the goal would be to give total control to the user
-	allowing them to allocate the memory for the allocators they want to use when they want
-
+	make memory manager use one single allocation strategy
 */
 
-template<class Allocator>
-class MemoryManager
-{
-public:
-	explicit MemoryManager(size_t size);
-	void * insert();
-	void remove();
-	void * access(size_t);
-	~MemoryManager();
-
-private:
-	Allocator allocator;
+struct Block {
+	size_t blockSize = 0;
+	uintptr_t start;
+	uintptr_t end;
+	Block * next;
 };
 
-template<>
-class MemoryManager<DoubleEndedStack> 
-{
+class MemoryManager {
 public:
-	void * insertTop();
-	void * insertBottom();
-	void deallocateTop();
-	void deallocateBottom();
+	MemoryManager();
+
+	Block * allocateNewBlock(size_t size); //create a new block and add it to the end of the list
+	void deallocateBlock(int index);
+
 
 private:
-
-	DoubleEndedStack allocator;
+	Block * firstBlock; //entry into list of blocks
+	size_t capacity; //max capacity of the allocate heap
+	size_t currentUsage; //how much of the heap is being used
+	int numBlocks;
+	void * memory; //start addres of heap
 
 
 };
-
-template<>
-class MemoryManager<Pool> 
-{
-public:
-	explicit MemoryManager(size_t size, int num_elements);
-
-private:
-	Pool * allocator;
-
-
-};
-
-//override the new operators, arrays and all that stuff here
-//create a new operator for each kind of memory allocator available
-//if that specific memory allocator is not yet created to manage memory throw an error
 
 

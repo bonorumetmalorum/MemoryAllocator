@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Stack.h"
-#include <memory>
+#include <malloc.h>
 
 
 Stack::Stack(size_t size)

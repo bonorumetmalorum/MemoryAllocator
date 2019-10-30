@@ -2,11 +2,10 @@
 //
 
 #include "pch.h"
-#include <iostream>
 #include "Stack.h"
 #include "DoubleEndedStack.h"
 #include "Pool.h"
-#include <malloc.h>
+#include <iostream>
 
 using namespace std;
 

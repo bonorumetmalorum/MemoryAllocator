@@ -2,7 +2,6 @@
 #include "DoubleEndedStack.h"
 #include <malloc.h>
 
-
 DoubleEndedStack::DoubleEndedStack(size_t limit)
 {
 	this->memory = malloc(limit);
