@@ -10,23 +10,15 @@
 	make memory manager use one single allocation strategy
 */
 
-struct Block {
-	size_t blockSize = 0;
-	uintptr_t start;
-	uintptr_t end;
-	Block * next;
-};
-
 class MemoryManager {
 public:
 	MemoryManager();
 
-	Block * allocateNewBlock(size_t size); //create a new block and add it to the end of the list
-	void deallocateBlock(int index);
+	void * allocate(size_t size); //create a new block and add it to the end of the list
+	void deallocate(int index);
 
 
 private:
-	Block * firstBlock; //entry into list of blocks
 	size_t capacity; //max capacity of the allocate heap
 	size_t currentUsage; //how much of the heap is being used
 	int numBlocks;

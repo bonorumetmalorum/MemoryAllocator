@@ -10,6 +10,43 @@ DoubleEndedStack::DoubleEndedStack(size_t limit)
 	bottomTop = mem;
 }
 
+void * DoubleEndedStack::allocate(size_t size, AllocOptions options)
+{
+	switch (options) {
+	case DEFAULT:
+		return this->allocBottom(size);
+		break;
+	case TOP:
+		return this->allocTop(size);
+		break;
+	case BOTTOM:
+		return this->allocBottom(size);
+		break;
+	default:
+		throw "invalid option";
+		break;
+	}
+	return nullptr;
+}
+
+void DoubleEndedStack::deallocate(Marker pos, AllocOptions options)
+{
+	switch (options) {
+	case DEFAULT:
+		this->freeToMarkerBottom(pos);
+		break;
+	case TOP:
+		this->freeToMarkerTop(pos);
+		break;
+	case BOTTOM:
+		this->freeToMarkerBottom(pos);
+		break;
+	default:
+		throw "invalid option";
+		break;
+	}
+}
+
 void * DoubleEndedStack::allocTop(size_t size)
 {
 	if (topTop - size < bottomTop) {

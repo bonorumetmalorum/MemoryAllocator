@@ -10,6 +10,16 @@ Stack::Stack(size_t size)
 	this->top = reinterpret_cast<uintptr_t>(this->memory);
 }
 
+void * Stack::allocate(size_t size, AllocOptions options)
+{
+	return this->alloc(size);
+}
+
+void Stack::deallocate(Marker pos, AllocOptions _)
+{
+	this->freeToMarker(pos);
+}
+
 void * Stack::alloc(size_t size)
 {
 	if (top + size > reinterpret_cast<Marker>(memory) + limit) {

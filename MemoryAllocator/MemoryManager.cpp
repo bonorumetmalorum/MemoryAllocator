@@ -5,3 +5,12 @@
 MemoryManager::MemoryManager()
 {
 }
+
+void * MemoryManager::allocate(size_t size)
+{
+	return nullptr;
+}
+
+void MemoryManager::deallocate(int index)
+{
+}
