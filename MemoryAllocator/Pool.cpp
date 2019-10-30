@@ -53,12 +53,10 @@ void * Pool::alloc()
 void Pool::dealloc(Marker pos)
 {
 	if (head == 0) {
-		//Marker mem_address = (index * sizeOfElement) + reinterpret_cast<Marker>(memory); //get the memory address by applying the offset
 		head = reinterpret_cast<void*>(pos); // set the head to the deallocated address
 		*(reinterpret_cast<Marker*>(head)) = 0; //add it to the free list by setting its next to NULL, since there was no more space except this one
 	}
 	else {
-		//Marker mem_address = (index * sizeOfElement) + reinterpret_cast<Marker>(memory); //get the memory address by applying the offset
 		Marker nextFree = reinterpret_cast<Marker>(head);//get the head as a marker
 		void * deallocatedAddress = reinterpret_cast<void*>(pos);
 		*(reinterpret_cast<Marker*>(deallocatedAddress)) = nextFree;//assign the head as a value to this index

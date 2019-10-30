@@ -2,27 +2,36 @@
 #include "Stack.h"
 #include "DoubleEndedStack.h"
 #include "Pool.h"
+#include "SmartPointer.h"
 
 /*
-	TODO: unify the allocators under a common interface
-	provide enum to allow for optional allocation parameters (e.g. double ended stack etc)
 
-	make memory manager use one single allocation strategy
+WHAT NOW?
+
+need to add a clear method
+
+smart pointes need to be implemented
+but where do they go? they need to put into one of the allocators.
+
 */
 
 class MemoryManager {
 public:
-	MemoryManager();
+	
 
-	void * allocate(size_t size); //create a new block and add it to the end of the list
-	void deallocate(int index);
+	static MemoryManager & initStack(size_t size, int pointerLimit);
+	static MemoryManager & initDoubleStack(size_t size, int pointerLimit);
+	static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
+
+	void * allocate(size_t size, AllocOptions = DEFAULT); //create a new block and add it to the end of the list
+	void deallocate(Marker index, AllocOptions = DEFAULT);
 
 
 private:
-	size_t capacity; //max capacity of the allocate heap
-	size_t currentUsage; //how much of the heap is being used
-	int numBlocks;
-	void * memory; //start addres of heap
+	MemoryManager();
+	MemoryManager(Allocator * allocator, int pointerLimit);
+	Allocator * allocator;
+	Pool * pointerStorage;
 
 
 };

@@ -53,7 +53,7 @@ void * DoubleEndedStack::allocTop(size_t size)
 		return nullptr;
 	}
 	else {
-		topTop -= size + 1;
+		topTop -= size;
 		void * address = (void *)topTop;
 		return address;
 	}
@@ -66,7 +66,7 @@ void * DoubleEndedStack::allocBottom(size_t size)
 	}
 	else {
 		void * address = (void*) bottomTop;
-		bottomTop += size + 1;
+		bottomTop += size;
 		return address;
 	}
 }

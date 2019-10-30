@@ -4,13 +4,38 @@
 
 MemoryManager::MemoryManager()
 {
+	this->allocator = new Stack(100);
 }
 
-void * MemoryManager::allocate(size_t size)
+MemoryManager::MemoryManager(Allocator * allocator, int pointerLimit)
 {
-	return nullptr;
+	this->allocator = allocator;
 }
 
-void MemoryManager::deallocate(int index)
+MemoryManager & MemoryManager::initStack(size_t size, int pointerLimit)
 {
+	static MemoryManager m(new Stack(size), pointerLimit);
+	return m;
+}
+
+MemoryManager & MemoryManager::initDoubleStack(size_t size, int pointerLimit)
+{
+	static MemoryManager m(new DoubleEndedStack(size), pointerLimit);
+	return m;
+}
+
+MemoryManager & MemoryManager::initPool(size_t size, int num_elements, int pointerLimit)
+{
+	static MemoryManager m(new Pool(size, num_elements), pointerLimit);
+	return m;
+}
+
+void * MemoryManager::allocate(size_t size, AllocOptions options)
+{
+	return this->allocator->allocate(size, options);
+}
+
+void MemoryManager::deallocate(Marker index, AllocOptions options)
+{
+	this->allocator->deallocate(index, options);
 }

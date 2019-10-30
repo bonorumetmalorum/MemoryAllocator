@@ -27,7 +27,7 @@ void * Stack::alloc(size_t size)
 	}
 	else {
 		void * address = reinterpret_cast<void*>(top);
-		top += size + 1;
+		top += size;
 		return address;
 	}
 }
