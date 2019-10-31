@@ -13,7 +13,7 @@ class Allocator
 public:
 	virtual void * allocate(size_t size, AllocOptions op = DEFAULT) = 0;
 	virtual void deallocate(Marker index, AllocOptions = DEFAULT) = 0;
-	~Allocator();
+	virtual ~Allocator() = 0;
 
 protected:
 	size_t capacity;

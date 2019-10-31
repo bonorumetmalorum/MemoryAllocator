@@ -5,7 +5,7 @@
 
 Stack::Stack(size_t size)
 {
-	this->limit = size;
+	this->capacity = size;
 	this->memory = malloc(size);
 	this->top = reinterpret_cast<uintptr_t>(this->memory);
 }
@@ -22,7 +22,7 @@ void Stack::deallocate(Marker pos, AllocOptions _)
 
 void * Stack::alloc(size_t size)
 {
-	if (top + size > reinterpret_cast<Marker>(memory) + limit) {
+	if (top + size > reinterpret_cast<Marker>(memory) + capacity) {
 		return nullptr;
 	}
 	else {
@@ -52,5 +52,5 @@ void Stack::clear()
 
 Stack::~Stack()
 {
-	//TODO
+	delete this->memory;
 }

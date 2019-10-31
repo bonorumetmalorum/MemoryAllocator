@@ -79,5 +79,5 @@ void* Pool::operator[](int index)
 
 Pool::~Pool()
 {
-	//TODO
+	delete this->memory;
 }

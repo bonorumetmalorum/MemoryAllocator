@@ -15,9 +15,6 @@ public:
 
 private:
 	Marker top;
-	void * memory;
-	size_t limit;
-
 	void * alloc(size_t size);
 	void freeToMarker(Marker marker);
 

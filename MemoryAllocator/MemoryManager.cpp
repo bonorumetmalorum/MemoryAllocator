@@ -11,6 +11,8 @@ MemoryManager::MemoryManager()
 MemoryManager::MemoryManager(Allocator * allocator, int pointerLimit)
 {
 	this->allocator = allocator;
+	this->pointerStorage = new Pool(sizeof(SmartPointer<int>), pointerLimit);
+	this->rcStorage = new Pool(sizeof(int), pointerLimit);
 }
 
 MemoryManager & MemoryManager::initStack(size_t size, int pointerLimit)
@@ -34,12 +36,17 @@ MemoryManager & MemoryManager::initPool(size_t size, int num_elements, int point
 void * MemoryManager::allocate(size_t size, AllocOptions options)
 {
 	void * address = this->allocator->allocate(size, options);
-	void * pointer = (SmartPointer*)this->pointerStorage->allocate(sizeof(SmartPointer));
-	new(pointer) SmartPointer(address);
-	return &pointer;
+	return address;
 }
 
 void MemoryManager::deallocate(Marker index, AllocOptions options)
 {
 	this->allocator->deallocate(index, options);
+}
+
+MemoryManager::~MemoryManager()
+{
+	//delete pointerStorage;
+	//delete rcStorage;
+	//delete allocator;
 }
