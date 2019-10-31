@@ -23,7 +23,7 @@ public:
 	static MemoryManager & initDoubleStack(size_t size, int pointerLimit);
 	static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
 
-	void * allocate(size_t size, AllocOptions = DEFAULT); //create a new block and add it to the end of the list
+	void* allocate(size_t size, AllocOptions = DEFAULT); 
 	void deallocate(Marker index, AllocOptions = DEFAULT);
 
 

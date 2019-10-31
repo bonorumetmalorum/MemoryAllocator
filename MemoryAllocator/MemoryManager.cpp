@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MemoryManager.h"
 #include <type_traits>
+#include <new>
 
 MemoryManager::MemoryManager()
 {
@@ -32,7 +33,10 @@ MemoryManager & MemoryManager::initPool(size_t size, int num_elements, int point
 
 void * MemoryManager::allocate(size_t size, AllocOptions options)
 {
-	return this->allocator->allocate(size, options);
+	void * address = this->allocator->allocate(size, options);
+	void * pointer = (SmartPointer*)this->pointerStorage->allocate(sizeof(SmartPointer));
+	new(pointer) SmartPointer(address);
+	return &pointer;
 }
 
 void MemoryManager::deallocate(Marker index, AllocOptions options)

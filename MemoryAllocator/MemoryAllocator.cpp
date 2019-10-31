@@ -132,7 +132,7 @@ int main()
 
 	manager.deallocate(reinterpret_cast<Marker>(vert));
 
-	Vertex * vert2 = (Vertex*) manager.allocate(sizeof(Vertex));
+	Vertex* vert2 = (Vertex*)manager.allocate(sizeof(Vertex));
 	
 	vert2->x = 200;
 	vert2->y = 300;

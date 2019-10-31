@@ -6,7 +6,8 @@ class SmartPointer
 {
 public:
 	SmartPointer(void * rawAddress);
-	SmartPointer(SmartPointer& other);
+	SmartPointer(const SmartPointer& other);
+	SmartPointer& operator=(SmartPointer& other);
 	template<typename T>
 	T & operator *();
 	~SmartPointer();
