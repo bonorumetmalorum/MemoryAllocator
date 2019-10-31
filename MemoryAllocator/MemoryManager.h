@@ -10,9 +10,6 @@ WHAT NOW?
 
 need to add a clear method
 
-smart pointes need to be implemented
-but where do they go? they need to put into one of the allocators.
-
 */
 
 class MemoryManager {
