@@ -52,5 +52,5 @@ void Stack::clear()
 
 Stack::~Stack()
 {
-	delete this->memory;
+
 }

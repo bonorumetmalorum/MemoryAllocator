@@ -69,8 +69,8 @@ template<class T>
 inline SmartPointer<T>::~SmartPointer()
 {
 	(*counter)--;
-	if (*counter == 0) {
-		delete rawAddress;
-		delete counter;
+	if (*counter == 1) {
+		//delete rawAddress;
+		//delete counter;
 	}
 }

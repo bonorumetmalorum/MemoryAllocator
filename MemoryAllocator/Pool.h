@@ -18,7 +18,7 @@ private:
 	void * head;
 	size_t currentUsage = 0;
 	Marker limit;
-
+	int numElements;
 	void * alloc();
 	void dealloc(Marker index);
 };

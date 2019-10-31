@@ -8,6 +8,7 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 	head = memory;
 	limit = (sizeOfElement * numElements) + reinterpret_cast<Marker>(memory);
 	this->sizeOfElement = sizeOfElement;
+	this->numElements = numElements;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
 	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
 	for (int i = 0; i < numElements; i++) {
@@ -67,7 +68,19 @@ void Pool::dealloc(Marker pos)
 
 void Pool::clear()
 {
-	//TODO
+	head = memory;
+	Marker * currentAddress = reinterpret_cast<Marker*>(head);
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
+	for (int i = 0; i < this->numElements; i++) {
+		if (i == numElements - 1) {
+			*currentAddress = 0;
+		}
+		else {
+			*currentAddress = nextFreeMarker;
+		}
+		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
+		nextFreeMarker += sizeOfElement;
+	}
 }
 
 void* Pool::operator[](int index)
@@ -79,5 +92,5 @@ void* Pool::operator[](int index)
 
 Pool::~Pool()
 {
-	delete this->memory;
+	
 }

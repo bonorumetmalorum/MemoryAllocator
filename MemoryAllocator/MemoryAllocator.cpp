@@ -161,16 +161,37 @@ void smartPointerTest() {
 void smartPointerAccessTest() {
 	int * p = new int;
 	int * rc = new int;
-	SmartPointer<int> * pointer = new SmartPointer<int>(p, rc);
-	SmartPointer<int> pointer2 = *pointer;
+	SmartPointer<int> pointer = *(new SmartPointer<int>(p, rc));
+	SmartPointer<int> pointer2 = pointer;
 	*pointer2 = 2;
 	cout << *pointer2 << endl;
 }
 
+void memoryAllocatorTest() {
+	MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
+	Vertex * vert = (Vertex*)manager.allocate(sizeof(Vertex));
+	vert->x = 100;
+	vert->y = 200;
+	vert->z = 300;
 
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+	
+	manager.deallocate(reinterpret_cast<Marker>(vert));
+
+	Vertex* vert2 = (Vertex*)manager.allocate(sizeof(Vertex));
+	
+	vert2->x = 200;
+	vert2->y = 300;
+	vert2->z = 400;
+
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+
+	cout << vert2->x << " " << vert2->y << " " << vert2->z << endl;
+}
 
 void memoryManagerSmartAllocateTest() {
 	MemoryManager m = MemoryManager::initStack(100, 100);
+
 	SmartPointer<int> s = m.smartAllocate<SmartPointer, int>(sizeof(int));
 	*s = 12;
 	cout << *s << endl;
@@ -188,28 +209,9 @@ int main()
 
 	//smartPointerTest();
 
-	memoryManagerSmartAllocateTest();
+	//memoryManagerSmartAllocateTest();
 
-	////-----memory allocator container tests-----
-	//MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
-	//Vertex * vert = (Vertex*)manager.allocate(sizeof(Vertex));
-	//vert->x = 100;
-	//vert->y = 200;
-	//vert->z = 300;
-
-	//cout << vert->x << " " << vert->y << " " << vert->z << endl;
-
-	//manager.deallocate(reinterpret_cast<Marker>(vert));
-
-	//Vertex* vert2 = (Vertex*)manager.allocate(sizeof(Vertex));
-	//
-	//vert2->x = 200;
-	//vert2->y = 300;
-	//vert2->z = 400;
-
-	//cout << vert->x << " " << vert->y << " " << vert->z << endl;
-
-	//cout << vert2->x << " " << vert2->y << " " << vert2->z << endl;
+	//memoryAllocatorTest();
 
 
 

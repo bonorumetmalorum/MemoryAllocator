@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "Allocator.h"
+#include <memory>
 
 Allocator::~Allocator()
 {
-	delete(memory);
+	free(memory);
 }

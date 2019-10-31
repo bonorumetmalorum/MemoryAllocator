@@ -46,7 +46,5 @@ void MemoryManager::deallocate(Marker index, AllocOptions options)
 
 MemoryManager::~MemoryManager()
 {
-	//delete pointerStorage;
-	//delete rcStorage;
 	//delete allocator;
 }
