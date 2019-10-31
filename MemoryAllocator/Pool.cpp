@@ -4,13 +4,19 @@
 
 Pool::Pool(size_t sizeOfElement, int numElements)
 {
-	memory = malloc(sizeOfElement * numElements);
+	if (sizeOfElement < sizeof(Marker)) {
+		memory = malloc(sizeof(Marker)*numElements);
+		this->sizeOfElement = sizeof(Marker);
+	}
+	else {
+		memory = malloc(sizeOfElement * numElements);
+		this->sizeOfElement = sizeOfElement;
+	}
 	head = memory;
-	limit = (sizeOfElement * numElements) + reinterpret_cast<Marker>(memory);
-	this->sizeOfElement = sizeOfElement;
+	limit = (this->sizeOfElement * numElements) + reinterpret_cast<Marker>(memory);
 	this->numElements = numElements;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
-	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + this->sizeOfElement;
 	for (int i = 0; i < numElements; i++) {
 		if (i == numElements-1) {
 			*currentAddress = 0;
@@ -19,7 +25,7 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 			*currentAddress = nextFreeMarker;
 		}
 		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
-		nextFreeMarker += sizeOfElement;
+		nextFreeMarker += this->sizeOfElement;
 
 	}
 }
@@ -39,7 +45,8 @@ void * Pool::alloc()
 	if (currentUsage + sizeOfElement > limit) {
 		return nullptr;
 	}
-	Marker nextFree = *(reinterpret_cast<Marker*>(head)); //next free block marker stored at head
+	Marker * ptr = (Marker*)head;
+	Marker nextFree = *(ptr); //next free block marker stored at head
 	void * address = head; // get the current address
 	if (nextFree == 0) {
 		head = 0;

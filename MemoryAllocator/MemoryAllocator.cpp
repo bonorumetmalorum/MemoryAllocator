@@ -190,11 +190,27 @@ void memoryAllocatorTest() {
 }
 
 void memoryManagerSmartAllocateTest() {
-	MemoryManager m = MemoryManager::initStack(100, 100);
+	SmartPointer<Vertex> s = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
+	(*s).x = 1.0;
+	(*s).y = 2.0;
+	(*s).z = 3.0;
+	cout << (*s).x << (*s).y << (*s).z << endl;
 
-	SmartPointer<int> s = m.smartAllocate<SmartPointer, int>(sizeof(int));
-	*s = 12;
-	cout << *s << endl;
+	cout << sizeof(SmartPointer<Vertex>) << " " << sizeof(SmartPointer<int>) << endl;
+
+	SmartPointer<Vertex> t = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
+	(*t).x = 6.0;
+	(*t).y = 6.0;
+	(*t).z = 6.0;
+	cout << (*t).x << (*t).y << (*t).z << endl;
+
+
+}
+
+void testPoolInt() {
+	Pool * pool = new Pool(sizeof(unsigned int), 3);
+	int * rc1 = (int*)pool->allocate(sizeof(int));
+	int * rc2 = (int*)pool->allocate(sizeof(int));
 }
 
 int main()
@@ -206,6 +222,8 @@ int main()
 	//testDoubleEndedStack();
 
 	//testPool();
+
+	testPoolInt();
 
 	//smartPointerTest();
 

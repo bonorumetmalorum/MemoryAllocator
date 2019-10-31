@@ -46,5 +46,5 @@ void MemoryManager::deallocate(Marker index, AllocOptions options)
 
 MemoryManager::~MemoryManager()
 {
-	//delete allocator;
+	delete allocator;
 }
