@@ -198,7 +198,7 @@ void memoryManagerSmartAllocateTest() {
 
 	cout << sizeof(SmartPointer<Vertex>) << " " << sizeof(SmartPointer<int>) << endl;
 
-	SmartPointer<Vertex> t = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
+	SmartPointer<Vertex> t = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
 	(*t).x = 6.0;
 	(*t).y = 6.0;
 	(*t).z = 6.0;
@@ -223,11 +223,11 @@ int main()
 
 	//testPool();
 
-	testPoolInt();
+	//testPoolInt();
 
 	//smartPointerTest();
 
-	//memoryManagerSmartAllocateTest();
+	memoryManagerSmartAllocateTest();
 
 	//memoryAllocatorTest();
 
