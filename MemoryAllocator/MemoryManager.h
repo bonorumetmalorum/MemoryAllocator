@@ -25,6 +25,8 @@ public:
 
 	template<template<class> class SmartPointer, typename T>
 	SmartPointer<T> smartAllocate(size_t, AllocOptions = DEFAULT);
+	void freeSmartPtr(Marker toFree);
+	void freeRC(Marker toFree);
 
 	~MemoryManager();
 

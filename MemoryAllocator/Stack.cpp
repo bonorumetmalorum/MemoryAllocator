@@ -5,8 +5,17 @@
 
 Stack::Stack(size_t size)
 {
+	if (size <= 0) {
+		throw "invalid size, size must be greater than 0";
+	}
 	this->capacity = size;
-	this->memory = malloc(size);
+	void * address = malloc(size);
+	if (address = nullptr) {
+		throw "error allocating memory";
+	}
+	else {
+		this->memory = address;
+	}
 	this->top = reinterpret_cast<uintptr_t>(this->memory);
 }
 
@@ -23,7 +32,7 @@ void Stack::deallocate(Marker pos, AllocOptions _)
 void * Stack::alloc(size_t size)
 {
 	if (top + size > reinterpret_cast<Marker>(memory) + capacity) {
-		return nullptr;
+		throw "out of memory";
 	}
 	else {
 		void * address = reinterpret_cast<void*>(top);

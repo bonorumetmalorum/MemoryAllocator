@@ -53,6 +53,11 @@ void testStackFull() {
 	cout << (char4 == nullptr) << endl;
 }
 
+void testStackConstruction() {
+	Stack * st = new Stack(0);
+}
+
+
 void testDoubleEndedStack() {
 
 	//double ended stack test
@@ -92,6 +97,63 @@ void testDoubleEndedStack() {
 	dst.clear();
 
 }
+
+void testDStackFullTop() {
+	DoubleEndedStack * dst = new DoubleEndedStack(3);
+	dst->allocate(sizeof(char), BOTTOM);
+	dst->allocate(sizeof(char), TOP);
+	dst->allocate(sizeof(char), TOP);
+	try {
+		dst->allocate(sizeof(char), TOP);
+	}
+	catch (const char* e) {
+		cout << e << endl;
+	}
+}
+
+void testDStackFullBottom() {
+	DoubleEndedStack * dst = new DoubleEndedStack(3);
+	dst->allocate(sizeof(char), TOP);
+	dst->allocate(sizeof(char), BOTTOM);
+	dst->allocate(sizeof(char), BOTTOM);
+	try {
+		dst->allocate(sizeof(char), BOTTOM);
+	}
+	catch (const char* e) {
+		cout << e << endl;
+	}
+}
+
+void testDStackInvalidMarker() {
+	DoubleEndedStack * dst = new DoubleEndedStack(3);
+	void * address1 = dst->allocate(sizeof(char), BOTTOM);
+	void * address2 = dst->allocate(sizeof(char), BOTTOM);
+	dst->deallocate(reinterpret_cast<Marker>(address2), BOTTOM);
+	try {
+		dst->deallocate(reinterpret_cast<Marker>(address2), BOTTOM);
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
+
+	try {
+		dst->deallocate(reinterpret_cast<Marker>(address1), TOP);
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
+}
+
+void testDStackConstructionError() {
+	try {
+		DoubleEndedStack * dst = new DoubleEndedStack(0);
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
+}
+
+
 
 void testPool() {
 	//pool allocator test
@@ -149,6 +211,33 @@ void testPool() {
 	}
 }
 
+void testPoolSmallerThanMarker() {
+	Pool * pool = new Pool(sizeof(unsigned int), 3);
+	int * rc1 = (int*)pool->allocate(sizeof(int));
+	int * rc2 = (int*)pool->allocate(sizeof(int));
+}
+
+void testPoolSizeLargerThanBlock() {
+
+}
+
+void poolOutOfBoundsTest() {
+
+}
+
+void poolInvlalidMarkerTest() {
+
+}
+
+void poolConstructionTest() {
+	try {
+		Pool * p = new Pool(sizeof(char), 10000000000000000000);
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
+}
+
 void smartPointerTest() {
 	int * ptr = new int;
 	int * rc = new int;
@@ -167,7 +256,9 @@ void smartPointerAccessTest() {
 	cout << *pointer2 << endl;
 }
 
-void memoryAllocatorTest() {
+void smartPointerDeleteTest() {}
+
+void memoryManagerTest() {
 	MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
 	Vertex * vert = (Vertex*)manager.allocate(sizeof(Vertex));
 	vert->x = 100;
@@ -204,14 +295,20 @@ void memoryManagerSmartAllocateTest() {
 	(*t).z = 6.0;
 	cout << (*t).x << (*t).y << (*t).z << endl;
 
-
 }
 
-void testPoolInt() {
-	Pool * pool = new Pool(sizeof(unsigned int), 3);
-	int * rc1 = (int*)pool->allocate(sizeof(int));
-	int * rc2 = (int*)pool->allocate(sizeof(int));
+void memoryManagerSmartPointerRcOutOfSpaceTest() {
+	SmartPointer<char> a = MemoryManager::initStack(100, 1).smartAllocate<SmartPointer, char>(sizeof(char));
+	try {
+		SmartPointer<char> b = MemoryManager::initStack(100, 1).smartAllocate<SmartPointer, char>(sizeof(char));
+	}
+	catch(const char * e){
+		cout << e << endl;
+	}
 }
+
+//provide new global new and delete functions to work with memory manager
+//make memory manager
 
 int main()
 {

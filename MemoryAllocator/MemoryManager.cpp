@@ -44,6 +44,16 @@ void MemoryManager::deallocate(Marker index, AllocOptions options)
 	this->allocator->deallocate(index, options);
 }
 
+void MemoryManager::freeSmartPtr(Marker toFree)
+{
+	pointerStorage->deallocate(toFree);
+}
+
+void MemoryManager::freeRC(Marker toFree)
+{
+	rcStorage->deallocate(toFree);
+}
+
 MemoryManager::~MemoryManager()
 {
 	delete allocator;

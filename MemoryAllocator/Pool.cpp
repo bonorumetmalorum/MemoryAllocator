@@ -9,7 +9,13 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 		this->sizeOfElement = sizeof(Marker);
 	}
 	else {
-		memory = malloc(sizeOfElement * numElements);
+		void * address = malloc(sizeOfElement * numElements);
+		if (address == nullptr) {
+			throw "error allocating memory";
+		}	
+		else {
+			memory = address;
+		}
 		this->sizeOfElement = sizeOfElement;
 	}
 	head = memory;

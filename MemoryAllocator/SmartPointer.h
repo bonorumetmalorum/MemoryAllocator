@@ -70,7 +70,12 @@ inline SmartPointer<T>::~SmartPointer()
 {
 	(*counter)--;
 	if (*counter == 1) {
-		//delete rawAddress;
-		//delete counter;
+		Marker toDelete = reinterpret_cast<Marker>(rawAddress);
+		Marker rcToDelete = reinterpret_cast<Marker>(counter);
+		Marker smartptrToDelete = reinterpret_cast<Marker>(this);
+		MemoryManager::initStack(100, 100).deallocate(toDelete);
+		MemoryManager::initStack(100, 100).freeRC(rcToDelete);
+		MemoryManager::initStack(100, 100).freeSmartPtr(smartptrToDelete);
+
 	}
 }
