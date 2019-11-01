@@ -39,7 +39,7 @@ void * MemoryManager::allocate(size_t size, AllocOptions options)
 	return address;
 }
 
-void MemoryManager::deallocate(Marker index, AllocOptions options)
+void MemoryManager::deallocate(Marker index, size_t size, AllocOptions options)
 {
 	this->allocator->deallocate(index, options);
 }

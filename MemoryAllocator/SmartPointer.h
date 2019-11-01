@@ -6,32 +6,37 @@ class SmartPointer
 {
 
 public:
-	SmartPointer(T * rawAddress, int* rc);
+	SmartPointer(T * rawAddress, int* rc, AllocOptions options = DEFAULT);
 	SmartPointer(const SmartPointer& other);
 	SmartPointer& operator=(SmartPointer& other);
 	T & operator *();
+	//T * operator ->();
+	//implement other operators [], ++, --
 	int getCounter();
 	~SmartPointer();
 
 private:
 	T * rawAddress;
 	int * counter;
+	AllocOptions options;
 };
 
 template<class T>
-inline SmartPointer<T>::SmartPointer(T * rawAddress, int * rc)
+inline SmartPointer<T>::SmartPointer(T * rawAddress, int * rc, AllocOptions options)
 {
 	this->rawAddress = rawAddress;
 	this->counter = rc;
 	*(this->counter) = 1;
+	this->options = options;
 }
 
 template<class T>
 inline SmartPointer<T>::SmartPointer(const SmartPointer & other)
 {
-	this->counter = other.counter;
-	this->rawAddress = other.rawAddress;
+	counter = other.counter;
+	rawAddress = other.rawAddress;
 	*counter += 1;
+	options = other.options;
 }
 
 template<class T>
@@ -47,8 +52,12 @@ inline SmartPointer<T> & SmartPointer<T>::operator=(SmartPointer<T> & other)
 	--(*prevCounter);
 
 	if (*prevCounter == 0) {
-		//delete the old data here
-		//need to setup the global memory manager to do this
+		Marker toDelete = reinterpret_cast<Marker>(rawAddress);
+		Marker rcToDelete = reinterpret_cast<Marker>(counter);
+		Marker smartptrToDelete = reinterpret_cast<Marker>(this);
+		MemoryManager::initStack(100, 100).deallocate(toDelete, this->options);
+		MemoryManager::initStack(100, 100).freeRC(rcToDelete);
+		MemoryManager::initStack(100, 100).freeSmartPtr(smartptrToDelete);
 	}
 
 	return *this;
@@ -60,6 +69,12 @@ inline T & SmartPointer<T>::operator*()
 	//if the memory is already free this will throw an error as invalid marker
 	return *rawAddress;
 }
+
+//template<class T>
+//inline T * SmartPointer<T>::operator->()
+//{
+//	return &rawAddress;
+//}
 
 template<class T>
 inline int SmartPointer<T>::getCounter()
@@ -75,7 +90,12 @@ inline SmartPointer<T>::~SmartPointer()
 		Marker toDelete = reinterpret_cast<Marker>(rawAddress);
 		Marker rcToDelete = reinterpret_cast<Marker>(counter);
 		Marker smartptrToDelete = reinterpret_cast<Marker>(this);
-		MemoryManager::initStack(100, 100).deallocate(toDelete);
+		if (this->options == TOP) {
+			MemoryManager::initStack(100, 100).deallocate(toDelete, sizeof(T), this->options);
+		}
+		else {
+			MemoryManager::initStack(100, 100).deallocate(toDelete, this->options);
+		}
 		MemoryManager::initStack(100, 100).freeRC(rcToDelete);
 		MemoryManager::initStack(100, 100).freeSmartPtr(smartptrToDelete);
 

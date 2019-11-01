@@ -8,7 +8,7 @@ class Pool : public Allocator
 public:
 	Pool(size_t sizeOfElement, int numElements);
 	void * allocate(size_t, AllocOptions = DEFAULT);
-	void deallocate(Marker pos, AllocOptions = DEFAULT);
+	void deallocate(Marker pos, size_t size = 0, AllocOptions = DEFAULT);
 	void clear();
 	void * operator[](int);
 	~Pool();

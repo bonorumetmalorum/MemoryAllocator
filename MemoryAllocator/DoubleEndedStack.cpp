@@ -14,6 +14,7 @@ DoubleEndedStack::DoubleEndedStack(size_t limit)
 	else {
 		this->memory = address;
 	}
+	capacity = limit;
 	Marker mem = reinterpret_cast<unsigned long long>(this->memory);
 	topTop = mem + limit;
 	bottomTop = mem;
@@ -38,14 +39,14 @@ void * DoubleEndedStack::allocate(size_t size, AllocOptions options)
 	return nullptr;
 }
 
-void DoubleEndedStack::deallocate(Marker pos, AllocOptions options)
+void DoubleEndedStack::deallocate(Marker pos, size_t size, AllocOptions options)
 {
 	switch (options) {
 	case DEFAULT:
 		this->freeToMarkerBottom(pos);
 		break;
 	case TOP:
-		this->freeToMarkerTop(pos);
+		this->freeToMarkerTop(pos, size);
 		break;
 	case BOTTOM:
 		this->freeToMarkerBottom(pos);
@@ -80,17 +81,17 @@ void * DoubleEndedStack::allocBottom(size_t size)
 	}
 }
 
-void DoubleEndedStack::freeToMarkerTop(Marker marker)
+void DoubleEndedStack::freeToMarkerTop(Marker marker, size_t size)
 {
-	if (marker < bottomTop || marker < reinterpret_cast<Marker>(memory) || marker > reinterpret_cast<Marker>(memory) + capacity) {
+	if (marker < topTop || marker > reinterpret_cast<Marker>(memory) + capacity) {
 		throw "invalid marker";
 	}
-	topTop = marker;
+	topTop = marker + size;
 }
 
 void DoubleEndedStack::freeToMarkerBottom(Marker marker)
 {
-	if (marker > bottomTop || marker < reinterpret_cast<Marker>(memory) || marker > reinterpret_cast<Marker>(memory) + capacity) {
+	if (marker > bottomTop || marker < reinterpret_cast<Marker>(memory)) {
 		throw "invalid marker";
 	}
 	bottomTop = marker;
@@ -109,5 +110,5 @@ Marker DoubleEndedStack::getMarkerBottom()
 void DoubleEndedStack::clear()
 {
 	bottomTop =  reinterpret_cast<Marker>(memory);
-	topTop = (reinterpret_cast<Marker>(memory)) + limit;
+	topTop = (reinterpret_cast<Marker>(memory)) + capacity;
 }

@@ -21,7 +21,7 @@ public:
 	static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
 
 	void * allocate(size_t size, AllocOptions = DEFAULT); 
-	void deallocate(Marker index, AllocOptions = DEFAULT);
+	void deallocate(Marker index, size_t size = 0, AllocOptions = DEFAULT);
 
 	template<template<class> class SmartPointer, typename T>
 	SmartPointer<T> smartAllocate(size_t, AllocOptions = DEFAULT);
@@ -43,10 +43,15 @@ template<template<class> class SmartPointer, typename T>
 SmartPointer<T> MemoryManager::smartAllocate(size_t size, AllocOptions options)
 {
 	T * address = (T*)this->allocate(size, options);
-	void* ptr = this->pointerStorage->allocate(size);
-	int* rc = (int*)this->rcStorage->allocate(size);
-	SmartPointer<T> * pointer = new(ptr) SmartPointer<T>(address, rc);
-	return *pointer;
+	try {
+		void* ptr = this->pointerStorage->allocate(size);
+		int* rc = (int*)this->rcStorage->allocate(size);
+		SmartPointer<T> * pointer = new(ptr) SmartPointer<T>(address, rc, options);
+		return *pointer;
+	}
+	catch (const char * e) {
+		throw "out of pointer / rc storage";
+	}
 }
 
 

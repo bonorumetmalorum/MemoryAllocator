@@ -44,7 +44,7 @@ void * Pool::allocate(size_t size, AllocOptions)
 	return this->alloc();
 }
 
-void Pool::deallocate(Marker pos, AllocOptions)
+void Pool::deallocate(Marker pos, size_t size, AllocOptions)
 {
 	this->dealloc(pos);
 }

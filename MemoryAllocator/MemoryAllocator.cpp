@@ -23,6 +23,7 @@ struct Vertex {
 	float z;
 };
 
+//-------------------------------------------------
 void testStack() {
 	Stack st(100);
 	int * p = (int *)st.allocate(sizeof(int));
@@ -57,7 +58,7 @@ void testStackConstruction() {
 	Stack * st = new Stack(0);
 }
 
-
+//------------------------------------------------
 void testDoubleEndedStack() {
 
 	//double ended stack test
@@ -111,6 +112,16 @@ void testDStackFullTop() {
 	}
 }
 
+void testDStackTopDeallocate() {
+	DoubleEndedStack * dst = new DoubleEndedStack(100);
+	Marker original = dst->getMarkerTop();
+	dst->allocate(sizeof(int), TOP);
+	Marker mTop = dst->getMarkerTop();
+	dst->deallocate(mTop, sizeof(int), TOP);
+	Marker mTop2 = dst->getMarkerTop();
+	cout << original << " " << mTop << " " << mTop2 << endl;
+}
+
 void testDStackFullBottom() {
 	DoubleEndedStack * dst = new DoubleEndedStack(3);
 	dst->allocate(sizeof(char), TOP);
@@ -152,8 +163,7 @@ void testDStackConstructionError() {
 		cout << e << endl;
 	}
 }
-
-
+//------------------------------------------------
 
 void testPool() {
 	//pool allocator test
@@ -212,6 +222,16 @@ void testPool() {
 }
 
 void poolOutOfMemoryTest() {
+	Pool * p = new Pool(sizeof(int), 3);
+	p->allocate(sizeof(int));
+	p->allocate(sizeof(int));
+	p->allocate(sizeof(int));
+	try {
+		p->allocate(sizeof(int));
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
 
 }
 
@@ -248,7 +268,7 @@ void testPoolSizeLargerThanBlock() {
 void poolOutOfBoundsTest() {
 	Pool * p = new Pool(sizeof(int), 10);
 	
-}
+}           
 
 void poolConstructionTest() {
 	try {
@@ -259,14 +279,19 @@ void poolConstructionTest() {
 	}
 }
 
+void poolAddressNotOnBlockBoundaryTest() {
+	//TODO
+	//the pool allocator must only accept markers that are a multiple of the size of the block
+}
+
+//-------------------------------------------------
 void smartPointerTest() {
 	int * ptr = new int;
 	int * rc = new int;
-	SmartPointer<int> * pointer = new SmartPointer<int>(ptr, rc);
+	SmartPointer<int> * pointer = new SmartPointer<int>(ptr, rc, DEFAULT);
 	SmartPointer<int>pointer2 = *pointer;
 	cout << pointer->getCounter() << endl;
 }
-
 
 void smartPointerAccessTest() {
 	int * p = new int;
@@ -281,6 +306,11 @@ void smartPointerDeleteTest() {
 	SmartPointer<int> p = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, int>(sizeof(int));
 }
 
+void smartPointerDStackTopDeallocate(){
+//TODO
+}
+
+//-------------------------------------------------
 void memoryManagerTest() {
 	MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
 	Vertex * vert = (Vertex*)manager.allocate(sizeof(Vertex));
@@ -330,8 +360,12 @@ void memoryManagerSmartPointerRcOutOfSpaceTest() {
 	}
 }
 
+void smartPointerDoubleFreeTest() {
+	SmartPointer<int> p = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, int>(sizeof(int));
+	//TODO
+}
+
 //provide new global new and delete functions to work with memory manager
-//make memory manager
 
 int main()
 {
@@ -340,6 +374,8 @@ int main()
 	//testStackFull();
 
 	//testDoubleEndedStack();
+	
+	//testDStackTopDeallocate();
 
 	//testPool();
 
@@ -349,13 +385,13 @@ int main()
 
 	//smartPointerTest();
 
-	smartPointerDeleteTest();
+	//smartPointerDeleteTest();
+	
+	//smartPointerDoubleFreeTest();
 
 	//memoryManagerSmartAllocateTest();
 
 	//memoryAllocatorTest();
-
-
 
 	return 0;
 }

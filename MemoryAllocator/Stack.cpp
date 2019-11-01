@@ -24,7 +24,7 @@ void * Stack::allocate(size_t size, AllocOptions options)
 	return this->alloc(size);
 }
 
-void Stack::deallocate(Marker pos, AllocOptions _)
+void Stack::deallocate(Marker pos, size_t size, AllocOptions _)
 {
 	this->freeToMarker(pos);
 }

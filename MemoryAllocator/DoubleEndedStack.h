@@ -8,13 +8,12 @@ class DoubleEndedStack : public Allocator
 public:
 	explicit DoubleEndedStack(size_t limit);
 	void * allocate(size_t, AllocOptions = DEFAULT);
-	void deallocate(Marker pos, AllocOptions = DEFAULT);
+	void deallocate(Marker pos, size_t size, AllocOptions = DEFAULT);
 
 	Marker getMarkerTop();
 	Marker getMarkerBottom();
 	void clear();
 private:
-	size_t limit;
 	Marker topTop;
 	Marker bottomTop;
 	void * memory;
@@ -22,7 +21,7 @@ private:
 	void * allocTop(size_t);
 	void * allocBottom(size_t);
 
-	void freeToMarkerTop(Marker marker);
+	void freeToMarkerTop(Marker marker, size_t size);
 	void freeToMarkerBottom(Marker marker);
 };
 
