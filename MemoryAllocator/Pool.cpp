@@ -36,8 +36,11 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 	}
 }
 
-void * Pool::allocate(size_t, AllocOptions)
+void * Pool::allocate(size_t size, AllocOptions)
 {
+	if (size > this->sizeOfElement) {
+		throw "element too big for block size";
+	}
 	return this->alloc();
 }
 
@@ -65,7 +68,10 @@ void * Pool::alloc()
 }
 
 void Pool::dealloc(Marker pos)
-{
+{ //need to check if the memory address is already part of the free list, if so throw an error, double free
+	if (isFreed(pos)) {
+		throw "invalid marker";
+	}
 	if (head == 0) {
 		head = reinterpret_cast<void*>(pos); // set the head to the deallocated address
 		*(reinterpret_cast<Marker*>(head)) = 0; //add it to the free list by setting its next to NULL, since there was no more space except this one
@@ -77,6 +83,22 @@ void Pool::dealloc(Marker pos)
 		head = deallocatedAddress;//assign head to this index
 	}
 
+}
+
+bool Pool::isFreed(Marker address)
+{
+	bool isFree = false;
+	Marker currentFree = reinterpret_cast<Marker>(head);//current free address
+	while (currentFree != 0) {
+		if (currentFree == address) {
+			isFree = true;
+			break;
+		}
+		void * currentRawAddress = reinterpret_cast<void *>(currentFree);//void * current address form
+		Marker * nextFree = reinterpret_cast<Marker *>(currentRawAddress);//get the next free address and assign its value to the currentFree
+		currentFree = *nextFree;
+	}
+	return isFree;
 }
 
 void Pool::clear()

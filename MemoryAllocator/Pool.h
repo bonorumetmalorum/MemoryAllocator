@@ -21,5 +21,6 @@ private:
 	int numElements;
 	void * alloc();
 	void dealloc(Marker index);
+	bool isFreed(Marker address);
 };
 

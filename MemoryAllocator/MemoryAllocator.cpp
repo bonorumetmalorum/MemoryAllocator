@@ -211,6 +211,24 @@ void testPool() {
 	}
 }
 
+void poolOutOfMemoryTest() {
+
+}
+
+void poolInvalidMarkerTest() {
+	Pool * p = new Pool(sizeof(int), 3);
+	void * address1 = p->allocate(sizeof(int));
+	void * address2 = p->allocate(sizeof(int));
+	void * address3 = p->allocate(sizeof(int));
+	p->deallocate(reinterpret_cast<Marker>(address1));
+	try {
+		p->deallocate(reinterpret_cast<Marker>(address1));
+	}
+	catch(const char * e){
+		cout << e << endl;
+	}
+}
+
 void testPoolSmallerThanMarker() {
 	Pool * pool = new Pool(sizeof(unsigned int), 3);
 	int * rc1 = (int*)pool->allocate(sizeof(int));
@@ -218,15 +236,18 @@ void testPoolSmallerThanMarker() {
 }
 
 void testPoolSizeLargerThanBlock() {
-
+	Pool * p = new Pool(sizeof(char), 10);
+	try {
+		p->allocate(sizeof(int));
+	}
+	catch (const char * e) {
+		cout << e << endl;
+	}
 }
 
 void poolOutOfBoundsTest() {
-
-}
-
-void poolInvlalidMarkerTest() {
-
+	Pool * p = new Pool(sizeof(int), 10);
+	
 }
 
 void poolConstructionTest() {
@@ -256,7 +277,9 @@ void smartPointerAccessTest() {
 	cout << *pointer2 << endl;
 }
 
-void smartPointerDeleteTest() {}
+void smartPointerDeleteTest() {
+	SmartPointer<int> p = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, int>(sizeof(int));
+}
 
 void memoryManagerTest() {
 	MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
@@ -322,9 +345,13 @@ int main()
 
 	//testPoolInt();
 
+	//poolInvalidMarkerTest();
+
 	//smartPointerTest();
 
-	memoryManagerSmartAllocateTest();
+	smartPointerDeleteTest();
+
+	//memoryManagerSmartAllocateTest();
 
 	//memoryAllocatorTest();
 

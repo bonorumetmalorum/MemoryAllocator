@@ -10,13 +10,13 @@ Stack::Stack(size_t size)
 	}
 	this->capacity = size;
 	void * address = malloc(size);
-	if (address = nullptr) {
+	if (address == nullptr) {
 		throw "error allocating memory";
 	}
 	else {
 		this->memory = address;
 	}
-	this->top = reinterpret_cast<uintptr_t>(this->memory);
+	this->top = reinterpret_cast<Marker>(this->memory);
 }
 
 void * Stack::allocate(size_t size, AllocOptions options)

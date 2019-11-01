@@ -21,6 +21,7 @@ private:
 template<class T>
 inline SmartPointer<T>::SmartPointer(T * rawAddress, int * rc)
 {
+	this->rawAddress = rawAddress;
 	this->counter = rc;
 	*(this->counter) = 1;
 }
@@ -56,6 +57,7 @@ inline SmartPointer<T> & SmartPointer<T>::operator=(SmartPointer<T> & other)
 template<class T>
 inline T & SmartPointer<T>::operator*()
 {
+	//if the memory is already free this will throw an error as invalid marker
 	return *rawAddress;
 }
 

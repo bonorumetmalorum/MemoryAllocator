@@ -48,3 +48,5 @@ SmartPointer<T> MemoryManager::smartAllocate(size_t size, AllocOptions options)
 	SmartPointer<T> * pointer = new(ptr) SmartPointer<T>(address, rc);
 	return *pointer;
 }
+
+
