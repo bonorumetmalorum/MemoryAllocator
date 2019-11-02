@@ -6,17 +6,15 @@ typedef unsigned long long Marker;
 class Pool : public Allocator
 {
 public:
-	Pool(size_t sizeOfElement, int numElements);
+	Pool(size_t sizeOfBlock, int numElements);
 	void * allocate(size_t, AllocOptions = DEFAULT);
 	void deallocate(Marker pos, size_t size = 0, AllocOptions = DEFAULT);
 	void clear();
 	void * operator[](int);
 	~Pool();
 private:
-	void * memory;
-	size_t sizeOfElement;
+	size_t sizeOfBlock;
 	void * head;
-	size_t currentUsage = 0;
 	Marker limit;
 	int numElements;
 	void * alloc();

@@ -7,7 +7,7 @@ class SmartPointer
 {
 
 public:
-	SmartPointer(T * rawAddress, int* rc, AllocOptions options = DEFAULT);
+	SmartPointer(T * rawAddress, void * selfAddress, int* rc, AllocOptions options = DEFAULT);
 	SmartPointer(const SmartPointer& other);
 	SmartPointer& operator=(SmartPointer& other);
 	T & operator *();
@@ -22,14 +22,16 @@ public:
 
 private:
 	T * rawAddress;
+	void * selfAddress;
 	int * counter;
 	AllocOptions options;
 };
 
 template<class T>
-inline SmartPointer<T>::SmartPointer(T * rawAddress, int * rc, AllocOptions options)
+inline SmartPointer<T>::SmartPointer(T * rawAddress, void * selfAddress, int * rc, AllocOptions options)
 {
 	this->rawAddress = rawAddress;
+	this->selfAddress = selfAddress;
 	this->counter = rc;
 	*(this->counter) = 1;
 	this->options = options;
@@ -40,6 +42,7 @@ inline SmartPointer<T>::SmartPointer(const SmartPointer & other)
 {
 	counter = other.counter;
 	rawAddress = other.rawAddress;
+	selfAddress = other.selfAddress;
 	*counter += 1;
 	options = other.options;
 }
@@ -94,7 +97,7 @@ inline SmartPointer<T>::~SmartPointer()
 	if (*counter == 1) {
 		Marker toDelete = reinterpret_cast<Marker>(rawAddress);
 		Marker rcToDelete = reinterpret_cast<Marker>(counter);
-		Marker smartptrToDelete = reinterpret_cast<Marker>(this);
+		Marker smartptrToDelete = reinterpret_cast<Marker>(selfAddress);
 		if (this->options == TOP) {
 			size_t size = sizeof(T);
 			MemoryManager::getInstance().deallocate(toDelete, size, this->options);

@@ -9,7 +9,7 @@ public:
 	explicit Stack(size_t size);
 	void * allocate(size_t, AllocOptions = DEFAULT);
 	void deallocate(Marker, size_t size = 0, AllocOptions = DEFAULT);
-	Marker getMarker();
+	Marker getTop();
 	void clear();
 	~Stack();
 

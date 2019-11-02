@@ -13,20 +13,19 @@ need to add a clear method
 */
 
 class MemoryManager {
+	
+	template<class T> friend class SmartPointer;
+
 public:
 	
 	static MemoryManager & getInstance();
-	//static MemoryManager & initStack(size_t size, int pointerLimit);
-	//static MemoryManager & initDoubleStack(size_t size, int pointerLimit);
-	//static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
 	void init(Allocator * allocator, int pointerLimit);
 	void * allocate(size_t size, AllocOptions = DEFAULT); 
 	void deallocate(Marker index, size_t size = 0, AllocOptions = DEFAULT);
 
 	template<template<class> class SmartPointer, typename T>
 	SmartPointer<T> smartAllocate(size_t, AllocOptions = DEFAULT);
-	void freeSmartPtr(Marker toFree);
-	void freeRC(Marker toFree);
+
 
 	~MemoryManager();
 
@@ -37,6 +36,9 @@ private:
 	Allocator * allocator;
 	Pool * pointerStorage;
 	Pool * rcStorage;
+
+	void freeSmartPtr(Marker toFree);
+	void freeRC(Marker toFree);
 };
 
 template<template<class> class SmartPointer, typename T>
@@ -46,7 +48,7 @@ SmartPointer<T> MemoryManager::smartAllocate(size_t size, AllocOptions options)
 	try {
 		void* ptr = this->pointerStorage->allocate(size);
 		int* rc = (int*)this->rcStorage->allocate(size);
-		SmartPointer<T> * pointer = new(ptr) SmartPointer<T>(address, rc, options);
+		SmartPointer<T> * pointer = new(ptr) SmartPointer<T>(address, ptr, rc, options);
 		return *pointer;
 	}
 	catch (const char * e) {

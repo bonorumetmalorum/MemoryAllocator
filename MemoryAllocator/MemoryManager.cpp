@@ -23,27 +23,6 @@ MemoryManager & MemoryManager::getInstance()
 	return m;
 }
 
-//method to set allocator and pool/rc siz
-
-
-//MemoryManager & MemoryManager::initStack(size_t size, int pointerLimit)
-//{
-//	static MemoryManager m(new Stack(size), pointerLimit);
-//	return m;
-//}
-//
-//MemoryManager & MemoryManager::initDoubleStack(size_t size, int pointerLimit)
-//{
-//	static MemoryManager m(new DoubleEndedStack(size), pointerLimit);
-//	return m;
-//}
-//
-//MemoryManager & MemoryManager::initPool(size_t size, int num_elements, int pointerLimit)
-//{
-//	static MemoryManager m(new Pool(size, num_elements), pointerLimit);
-//	return m;
-//}
-
 void MemoryManager::init(Allocator * allocator, int pointerLimit)
 {
 	if (pointerLimit <= 0) {

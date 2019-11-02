@@ -41,7 +41,7 @@ void * Stack::alloc(size_t size)
 	}
 }
 
-Marker Stack::getMarker()
+Marker Stack::getTop()
 {
 	return this->top;
 }

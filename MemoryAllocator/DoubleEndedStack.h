@@ -16,7 +16,6 @@ public:
 private:
 	Marker topTop;
 	Marker bottomTop;
-	void * memory;
 	
 	void * allocTop(size_t);
 	void * allocBottom(size_t);

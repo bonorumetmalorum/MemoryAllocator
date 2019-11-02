@@ -6,7 +6,7 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 {
 	if (sizeOfElement < sizeof(Marker)) {
 		memory = malloc(sizeof(Marker)*numElements);
-		this->sizeOfElement = sizeof(Marker);
+		this->sizeOfBlock = sizeof(Marker);
 	}
 	else {
 		void * address = malloc(sizeOfElement * numElements);
@@ -16,13 +16,13 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 		else {
 			memory = address;
 		}
-		this->sizeOfElement = sizeOfElement;
+		this->sizeOfBlock = sizeOfElement;
 	}
 	head = memory;
-	limit = (this->sizeOfElement * numElements) + reinterpret_cast<Marker>(memory);
+	limit = (this->sizeOfBlock * numElements) + reinterpret_cast<Marker>(memory);
 	this->numElements = numElements;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
-	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + this->sizeOfElement;
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + this->sizeOfBlock;
 	for (int i = 0; i < numElements; i++) {
 		if (i == numElements-1) {
 			*currentAddress = 0;
@@ -31,14 +31,14 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 			*currentAddress = nextFreeMarker;
 		}
 		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
-		nextFreeMarker += this->sizeOfElement;
+		nextFreeMarker += this->sizeOfBlock;
 
 	}
 }
 
 void * Pool::allocate(size_t size, AllocOptions)
 {
-	if (size > this->sizeOfElement) {
+	if (size > this->sizeOfBlock) {
 		throw "element too big for block size";
 	}
 	return this->alloc();
@@ -46,13 +46,18 @@ void * Pool::allocate(size_t size, AllocOptions)
 
 void Pool::deallocate(Marker pos, size_t size, AllocOptions)
 {
+	Marker mem = reinterpret_cast<Marker>(memory);
+	Marker offset = (pos - mem) + sizeOfBlock;
+	if (offset%sizeOfBlock != 0) {
+		throw "invalid marker";
+	}
 	this->dealloc(pos);
 }
 
 void * Pool::alloc()
 {
-	if (currentUsage + sizeOfElement > limit) {
-		return nullptr;
+	if (head == nullptr) {
+		throw "out of memory";
 	}
 	Marker * ptr = (Marker*)head;
 	Marker nextFree = *(ptr); //next free block marker stored at head
@@ -105,7 +110,7 @@ void Pool::clear()
 {
 	head = memory;
 	Marker * currentAddress = reinterpret_cast<Marker*>(head);
-	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfElement;
+	Marker nextFreeMarker = reinterpret_cast<Marker>(head) + sizeOfBlock;
 	for (int i = 0; i < this->numElements; i++) {
 		if (i == numElements - 1) {
 			*currentAddress = 0;
@@ -114,14 +119,14 @@ void Pool::clear()
 			*currentAddress = nextFreeMarker;
 		}
 		currentAddress = (Marker *)reinterpret_cast<void *>(nextFreeMarker);
-		nextFreeMarker += sizeOfElement;
+		nextFreeMarker += sizeOfBlock;
 	}
 }
 
 void* Pool::operator[](int index)
 {
 	Marker baseAddress = reinterpret_cast<Marker>(memory);
-	Marker offset = baseAddress + (this->sizeOfElement * index);
+	Marker offset = baseAddress + (this->sizeOfBlock * index);
 	return reinterpret_cast<void*>(offset);
 }
 
