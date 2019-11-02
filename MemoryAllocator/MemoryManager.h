@@ -15,11 +15,11 @@ need to add a clear method
 class MemoryManager {
 public:
 	
-
-	static MemoryManager & initStack(size_t size, int pointerLimit);
-	static MemoryManager & initDoubleStack(size_t size, int pointerLimit);
-	static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
-
+	static MemoryManager & getInstance();
+	//static MemoryManager & initStack(size_t size, int pointerLimit);
+	//static MemoryManager & initDoubleStack(size_t size, int pointerLimit);
+	//static MemoryManager & initPool(size_t size, int num_elements, int pointerLimit);
+	void init(Allocator * allocator, int pointerLimit);
 	void * allocate(size_t size, AllocOptions = DEFAULT); 
 	void deallocate(Marker index, size_t size = 0, AllocOptions = DEFAULT);
 

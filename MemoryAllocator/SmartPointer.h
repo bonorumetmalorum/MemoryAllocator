@@ -1,5 +1,6 @@
 #pragma once
 #include "MemoryManager.h"
+#include <ostream>
 
 template<class T>
 class SmartPointer
@@ -12,6 +13,10 @@ public:
 	T & operator *();
 	//T * operator ->();
 	//implement other operators [], ++, --
+	friend std::ostream& operator <<(std::ostream& os, const SmartPointer& ptr) {
+		os << ptr.rawAddress;
+		return os;
+	};
 	int getCounter();
 	~SmartPointer();
 
@@ -91,13 +96,14 @@ inline SmartPointer<T>::~SmartPointer()
 		Marker rcToDelete = reinterpret_cast<Marker>(counter);
 		Marker smartptrToDelete = reinterpret_cast<Marker>(this);
 		if (this->options == TOP) {
-			MemoryManager::initStack(100, 100).deallocate(toDelete, sizeof(T), this->options);
+			size_t size = sizeof(T);
+			MemoryManager::getInstance().deallocate(toDelete, size, this->options);
 		}
 		else {
-			MemoryManager::initStack(100, 100).deallocate(toDelete, this->options);
+			MemoryManager::getInstance().deallocate(toDelete, this->options);
 		}
-		MemoryManager::initStack(100, 100).freeRC(rcToDelete);
-		MemoryManager::initStack(100, 100).freeSmartPtr(smartptrToDelete);
+		MemoryManager::getInstance().freeRC(rcToDelete);
+		MemoryManager::getInstance().freeSmartPtr(smartptrToDelete);
 
 	}
 }

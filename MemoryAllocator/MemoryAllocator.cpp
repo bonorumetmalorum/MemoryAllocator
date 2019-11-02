@@ -303,26 +303,33 @@ void smartPointerAccessTest() {
 }
 
 void smartPointerDeleteTest() {
-	SmartPointer<int> p = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, int>(sizeof(int));
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
 }
 
 void smartPointerDStackTopDeallocate(){
-//TODO
+	MemoryManager::getInstance().init(new DoubleEndedStack(100), 100);
+	{
+		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int), TOP);
+		cout << p << endl;
+	}
+	SmartPointer<int> e = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int), TOP);
+	cout << e << endl;
 }
 
 //-------------------------------------------------
 void memoryManagerTest() {
-	MemoryManager manager = MemoryManager::initStack(100, 100); //lazy initialised singleton
-	Vertex * vert = (Vertex*)manager.allocate(sizeof(Vertex));
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	Vertex * vert = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
 	vert->x = 100;
 	vert->y = 200;
 	vert->z = 300;
 
 	cout << vert->x << " " << vert->y << " " << vert->z << endl;
 	
-	manager.deallocate(reinterpret_cast<Marker>(vert));
+	MemoryManager::getInstance().deallocate(reinterpret_cast<Marker>(vert));
 
-	Vertex* vert2 = (Vertex*)manager.allocate(sizeof(Vertex));
+	Vertex* vert2 = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
 	
 	vert2->x = 200;
 	vert2->y = 300;
@@ -334,7 +341,8 @@ void memoryManagerTest() {
 }
 
 void memoryManagerSmartAllocateTest() {
-	SmartPointer<Vertex> s = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex> s = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
 	(*s).x = 1.0;
 	(*s).y = 2.0;
 	(*s).z = 3.0;
@@ -342,7 +350,7 @@ void memoryManagerSmartAllocateTest() {
 
 	cout << sizeof(SmartPointer<Vertex>) << " " << sizeof(SmartPointer<int>) << endl;
 
-	SmartPointer<Vertex> t = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
+	SmartPointer<Vertex> t = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
 	(*t).x = 6.0;
 	(*t).y = 6.0;
 	(*t).z = 6.0;
@@ -351,9 +359,10 @@ void memoryManagerSmartAllocateTest() {
 }
 
 void memoryManagerSmartPointerRcOutOfSpaceTest() {
-	SmartPointer<char> a = MemoryManager::initStack(100, 1).smartAllocate<SmartPointer, char>(sizeof(char));
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<char> a = MemoryManager::getInstance().smartAllocate<SmartPointer, char>(sizeof(char));
 	try {
-		SmartPointer<char> b = MemoryManager::initStack(100, 1).smartAllocate<SmartPointer, char>(sizeof(char));
+		SmartPointer<char> b = MemoryManager::getInstance().smartAllocate<SmartPointer, char>(sizeof(char));
 	}
 	catch(const char * e){
 		cout << e << endl;
@@ -361,7 +370,8 @@ void memoryManagerSmartPointerRcOutOfSpaceTest() {
 }
 
 void smartPointerDoubleFreeTest() {
-	SmartPointer<int> p = MemoryManager::initStack(100, 100).smartAllocate<SmartPointer, int>(sizeof(int));
+	MemoryManager::getInstance().init(new Pool(sizeof(int), 100), 100);
+	SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
 	//TODO
 }
 
@@ -388,6 +398,8 @@ int main()
 	//smartPointerDeleteTest();
 	
 	//smartPointerDoubleFreeTest();
+
+	smartPointerDStackTopDeallocate();
 
 	//memoryManagerSmartAllocateTest();
 
