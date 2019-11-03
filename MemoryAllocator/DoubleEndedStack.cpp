@@ -2,6 +2,12 @@
 #include "DoubleEndedStack.h"
 #include <malloc.h>
 
+/*
+	Construct a DoubleEndedStack
+	@param limit the total size of the memory managed by this DoubleEndedStack
+	@throws if limit <= 0
+	@throws if malloc fails to allocate memory
+*/
 DoubleEndedStack::DoubleEndedStack(size_t limit)
 {
 	if (limit <= 0) {
@@ -20,6 +26,14 @@ DoubleEndedStack::DoubleEndedStack(size_t limit)
 	bottomTop = mem;
 }
 
+/*
+	Allocate the memory
+	@param size size of memory to allocate
+	@param options allocate to TOP or to BOTTOM stack
+	@throws if invalid option is given
+	@throws if top or bottom stack is out of memory
+	@return void *  to the address of memory allocated
+*/
 void * DoubleEndedStack::allocate(size_t size, AllocOptions options)
 {
 	switch (options) {
@@ -39,6 +53,14 @@ void * DoubleEndedStack::allocate(size_t size, AllocOptions options)
 	return nullptr;
 }
 
+/*
+	Deallocate memory
+	@param pos memory address to deallocate
+	@param size size of memory to deallocate
+	@options deallocate from TOP or BOTTOM
+	@throws if invalid option is given
+	@throws if the marker fails boundary checks
+*/
 void DoubleEndedStack::deallocate(Marker pos, size_t size, AllocOptions options)
 {
 	switch (options) {
@@ -97,16 +119,27 @@ void DoubleEndedStack::freeToMarkerBottom(Marker marker)
 	bottomTop = marker;
 }
 
+/*
+	get the top of the top stack
+	@return Marker current position of the top of the top stack (points to last allocated position)
+*/
 Marker DoubleEndedStack::getMarkerTop()
 {
 	return topTop;
 }
 
+/*
+	get the top of the bottom stack
+	@return Marker current position of the top of the bottom stack (points to free memory)
+*/
 Marker DoubleEndedStack::getMarkerBottom()
 {
 	return bottomTop;
 }
 
+/*
+	resets both bottom and top stacks, does not delete the memory but allows for their reallocation
+*/
 void DoubleEndedStack::clear()
 {
 	bottomTop =  reinterpret_cast<Marker>(memory);

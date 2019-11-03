@@ -1,8 +1,9 @@
 #pragma once
 #include "Allocator.h"
 
-typedef unsigned long long Marker;
-
+/*
+	Stack allocator
+*/
 class Stack : public Allocator
 {
 public:

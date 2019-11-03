@@ -2,6 +2,12 @@
 #include "Pool.h"
 #include <malloc.h>
 
+/*
+	Construct a pool allocator
+	@param sizeOfElement the block size
+	@param numElements the number of blocks
+	@throws when malloc fails
+*/
 Pool::Pool(size_t sizeOfElement, int numElements)
 {
 	if (sizeOfElement < sizeof(Marker)) {
@@ -36,6 +42,13 @@ Pool::Pool(size_t sizeOfElement, int numElements)
 	}
 }
 
+/*
+	allocate a block of data
+	@param size the amount of data being allocated
+	@param AllocOptions not used in this case
+	@throw when the size of data is greater than the block size
+	@return void * of the memory that was just allocated
+*/
 void * Pool::allocate(size_t size, AllocOptions)
 {
 	if (size > this->sizeOfBlock) {
@@ -44,6 +57,13 @@ void * Pool::allocate(size_t size, AllocOptions)
 	return this->alloc();
 }
 
+/*
+	deallocate a block of memory
+	@param pos the block to deallocate
+	@param size the amount of data to deallocate, not used in this case
+	@param allocation options not used in this case
+	@throws if pos is not on a block boundary
+*/
 void Pool::deallocate(Marker pos, size_t size, AllocOptions)
 {
 	Marker mem = reinterpret_cast<Marker>(memory);
@@ -106,6 +126,9 @@ bool Pool::isFreed(Marker address)
 	return isFree;
 }
 
+/*
+	reset the pool allocator, adds everything back to free list
+*/
 void Pool::clear()
 {
 	head = memory;
@@ -123,6 +146,10 @@ void Pool::clear()
 	}
 }
 
+/*
+	convenience method to inspect the pools internal blocks
+	@param index the block number
+*/
 void* Pool::operator[](int index)
 {
 	Marker baseAddress = reinterpret_cast<Marker>(memory);

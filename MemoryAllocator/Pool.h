@@ -1,8 +1,9 @@
 #pragma once
 #include "Allocator.h"
 
-typedef unsigned long long Marker;
-
+/*
+	Pool allocator that allocates fixed size blocks of data
+*/
 class Pool : public Allocator
 {
 public:

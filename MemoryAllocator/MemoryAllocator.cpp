@@ -1,6 +1,8 @@
-// MemoryAllocator.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+/**
+	Game Engines and Workflow CW1
+	Memory Manager
+	Cand No.: 201332107
+*/
 #include "pch.h"
 #include "MemoryManager.h"
 #include <iostream>
@@ -35,6 +37,9 @@ struct Vertex {
 };
 
 //-------------------------------------------------
+/**
+	Stack integration test
+*/
 void testStack() {
 	Stack st(100);
 	int * p = (int *)st.allocate(sizeof(int));
@@ -52,6 +57,9 @@ void testStack() {
 	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;
 }
 
+/**
+	Stack out of memory test
+*/
 void testStackFull() {
 	Stack st(3);
 	char * char1 = (char*)st.allocate(sizeof(char));
@@ -69,6 +77,9 @@ void testStackFull() {
 	}
 }
 
+/**
+	Stack bad construction test
+*/
 void testBadStackConstruction() {
 	try {
 		Stack * st = new Stack(0);
@@ -78,11 +89,17 @@ void testBadStackConstruction() {
 	}
 }
 
+/**
+	Stack construction test
+*/
 void testStackConstruction() {
 	Stack * st = new Stack(100);
 }
 
 //------------------------------------------------
+/*
+	double ended stack integration test
+*/
 void testDoubleEndedStack() {
 
 	//double ended stack test
@@ -123,6 +140,9 @@ void testDoubleEndedStack() {
 
 }
 
+/*
+	double ended stack top out of memory test
+*/
 void testDStackFullTop() {
 	DoubleEndedStack * dst = new DoubleEndedStack(3);
 	dst->allocate(sizeof(char), BOTTOM);
@@ -136,6 +156,9 @@ void testDStackFullTop() {
 	}
 }
 
+/*
+	double ended stack top deallocate test
+*/
 void testDStackTopDeallocate() {
 	DoubleEndedStack * dst = new DoubleEndedStack(100);
 	Marker original = dst->getMarkerTop();
@@ -146,6 +169,10 @@ void testDStackTopDeallocate() {
 	cout << original << " " << mTop << " " << mTop2 << endl;
 }
 
+
+/*
+	double ended stack bottom out of memory
+*/
 void testDStackFullBottom() {
 	DoubleEndedStack * dst = new DoubleEndedStack(3);
 	dst->allocate(sizeof(char), TOP);
@@ -159,6 +186,9 @@ void testDStackFullBottom() {
 	}
 }
 
+/*
+	double ended stack invalid marker boundry checks test
+*/
 void testDStackInvalidMarker() {
 	DoubleEndedStack * dst = new DoubleEndedStack(3);
 	void * address1 = dst->allocate(sizeof(char), BOTTOM);
@@ -180,6 +210,9 @@ void testDStackInvalidMarker() {
 	}
 }
 
+/*
+	double ended stack construction error test
+*/
 void testDStackConstructionError() {
 	try {
 		DoubleEndedStack * dst = new DoubleEndedStack(0);
@@ -190,6 +223,9 @@ void testDStackConstructionError() {
 }
 //------------------------------------------------
 
+/*
+	pool integration test
+*/
 void testPool() {
 	//pool allocator test
 
@@ -246,6 +282,9 @@ void testPool() {
 	}
 }
 
+/*
+	pool out of memory test
+*/
 void testPoolOutOfMemory() {
 	Pool * p = new Pool(sizeof(int), 3);
 	p->allocate(sizeof(int));
@@ -260,6 +299,9 @@ void testPoolOutOfMemory() {
 
 }
 
+/*
+	pool invalid marker boundary check test
+*/
 void testPoolInvalidMarker() {
 	Pool * p = new Pool(sizeof(int), 3);
 	void * address1 = p->allocate(sizeof(int));
@@ -274,12 +316,18 @@ void testPoolInvalidMarker() {
 	}
 }
 
+/*
+	pool block size smaller than Marker test
+*/
 void testPoolSmallerThanMarker() {
 	Pool * pool = new Pool(sizeof(unsigned int), 3);
 	int * rc1 = (int*)pool->allocate(sizeof(int));
 	int * rc2 = (int*)pool->allocate(sizeof(int));
 }
 
+/*
+	pool allocation request larger than block test
+*/
 void testPoolSizeLargerThanBlock() {
 	Pool * p = new Pool(sizeof(char), 10);
 	try {
@@ -290,13 +338,22 @@ void testPoolSizeLargerThanBlock() {
 	}
 }
 
-/*void testPoolOutOfBounds() {
+/*
+	pool boundary check test
+*/
+void testPoolOutOfBounds() {
 	Pool * p = new Pool(sizeof(int), 10);
 	try {
-
+		p->deallocate(0, 10);
 	}
-}*/           
+	catch (const char * e) {
+		cout << e << endl;
+	}
+}           
 
+/*
+	pool consturction test
+*/
 void testPoolConstruction() {
 	try {
 		Pool * p = new Pool(sizeof(char), 10000000000000000000); //unable to make this throw an error but it should work
@@ -306,6 +363,9 @@ void testPoolConstruction() {
 	}
 }
 
+/*
+	pool address is inbetween blocks test
+*/
 void testPoolAddressNotOnBlockBoundary() {
 	Pool * p = new Pool(sizeof(Vertex), 100);
 	char * verttoinc = (char*)p->allocate(sizeof(Vertex));
@@ -321,6 +381,9 @@ void testPoolAddressNotOnBlockBoundary() {
 }
 
 //-------------------------------------------------
+/*
+	smart pointer integration test
+*/
 void testSmartPointer() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
 	SmartPointer<int> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
@@ -328,6 +391,9 @@ void testSmartPointer() {
 	cout << pointer.getCounter() << endl;
 }
 
+/*
+	smart pointer access data test
+*/
 void testSmartPointerAccess() {
 	MemoryManager::getInstance().init(new Pool(sizeof(Vertex), 100), 100);
 	SmartPointer<Vertex> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
@@ -336,11 +402,19 @@ void testSmartPointerAccess() {
 	cout << (*pointer2).x << (*pointer).y << (*pointer).z << endl;
 }
 
+/*
+	smart pointer destruction test
+*/
 void testSmartPointerDelete() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
-	SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
+	{
+		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
+	}
 }
 
+/*
+	smart pointer double ended stack deallocation test
+*/
 void testSmartPointerDStackTopDeallocate(){
 	MemoryManager::getInstance().init(new DoubleEndedStack(100), 100);
 	{
@@ -351,14 +425,11 @@ void testSmartPointerDStackTopDeallocate(){
 	cout << e << endl;
 }
 
-//very hard to reproduce, need to think some more about this one
-//void testSmartPointerDoubleFree() {
-//	MemoryManager::getInstance().init(new Pool(sizeof(int), 100), 100);
-//	SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
-//}
-
 //-------------------------------------------------
-void testMemoryManager() {
+/*
+	memory manager stack integration test
+*/
+void testMemoryManagerStack() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
 	Vertex * vert = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
 	vert->x = 100;
@@ -380,9 +451,62 @@ void testMemoryManager() {
 	cout << vert2->x << " " << vert2->y << " " << vert2->z << endl;
 }
 
+/*
+	memory manager double ended stack integration test
+*/
+void testMemoryManagerDStack() {
+	MemoryManager::getInstance().init(new DoubleEndedStack(100), 100);
+	Vertex * vert = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
+	vert->x = 100;
+	vert->y = 200;
+	vert->z = 300;
+
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+
+	MemoryManager::getInstance().deallocate(reinterpret_cast<Marker>(vert));
+
+	Vertex* vert2 = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
+
+	vert2->x = 200;
+	vert2->y = 300;
+	vert2->z = 400;
+
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+
+	cout << vert2->x << " " << vert2->y << " " << vert2->z << endl;
+}
+
+/*
+	memory manager pool integration test
+*/
+void testMemoryManagerPool() {
+	MemoryManager::getInstance().init(new Pool(sizeof(Vertex), 100), 100);
+	Vertex * vert = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
+	vert->x = 100;
+	vert->y = 200;
+	vert->z = 300;
+
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+
+	MemoryManager::getInstance().deallocate(reinterpret_cast<Marker>(vert));
+
+	Vertex* vert2 = (Vertex*)MemoryManager::getInstance().allocate(sizeof(Vertex));
+
+	vert2->x = 200;
+	vert2->y = 300;
+	vert2->z = 400;
+
+	cout << vert->x << " " << vert->y << " " << vert->z << endl;
+
+	cout << vert2->x << " " << vert2->y << " " << vert2->z << endl;
+}
+
+/*
+	memory manager smart allocation test
+*/
 void testMemoryManagerSmartAllocate() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
-	SmartPointer<Vertex> s = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex)); //need to make a better method for this, very clunky to keep calling over and over to get the instance
+	SmartPointer<Vertex> s = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
 	(*s).x = 1.0;
 	(*s).y = 2.0;
 	(*s).z = 3.0;
@@ -398,6 +522,9 @@ void testMemoryManagerSmartAllocate() {
 
 }
 
+/*
+	memory manager reference count and smart pointer out of memory test
+*/
 void testMemoryManagerSmartPointerRcOutOfSpace() {
 	MemoryManager::getInstance().init(new Stack(100), 1);
 	SmartPointer<char> a = MemoryManager::getInstance().smartAllocate<SmartPointer, char>(sizeof(char));
@@ -409,7 +536,9 @@ void testMemoryManagerSmartPointerRcOutOfSpace() {
 	}
 }
 
-//TODO
+/*
+	memory manager out of memory test
+*/
 void testMemoryManagerOutOfMemory() {
 	MemoryManager::getInstance().init(new Pool(sizeof(int), 2), 100);
 	MemoryManager::getInstance().allocate(sizeof(int));
@@ -423,7 +552,10 @@ void testMemoryManagerOutOfMemory() {
 		 
 }
 
-//TODO
+
+/*
+	memory manager bad initialisation test
+*/
 void testMemoryManagerNoInit() {
 	try {
 		MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
@@ -491,7 +623,11 @@ int main()
 
 	//-----------------------------------
 
-	//testMemoryManager();
+	//testMemoryManagerStack();
+
+	//testMemoryManagerDStack();
+
+	//testMemoryManagerPool();
 
 	//testMemoryManagerSmartAllocate();
 

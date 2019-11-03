@@ -1,8 +1,10 @@
 #pragma once
 #include "Allocator.h"
 
-typedef unsigned long long Marker;
-
+/*
+	Double ended stack allocator
+	two stacks, top and bottom, located at either end of the chunk of memory, that grow inwards
+*/
 class DoubleEndedStack : public Allocator
 {
 public:

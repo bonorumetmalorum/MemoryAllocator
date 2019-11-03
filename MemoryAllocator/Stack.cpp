@@ -2,7 +2,10 @@
 #include "Stack.h"
 #include <malloc.h>
 
-
+/*
+	Construct a stack
+	@param size the total size of memory managed by this stack
+*/
 Stack::Stack(size_t size)
 {
 	if (size <= 0) {
@@ -19,11 +22,24 @@ Stack::Stack(size_t size)
 	this->top = reinterpret_cast<Marker>(this->memory);
 }
 
+/*
+	allocate memory
+	@param size the amount of memory being allocated
+	@param AllocOptions not used in this case
+	@throw when out of memory
+	@return void * address of memory that was allocated
+*/
 void * Stack::allocate(size_t size, AllocOptions options)
 {
 	return this->alloc(size);
 }
 
+/*
+	deallcoate the memory
+	@param size the amount of memory being allocated
+	@param AllocOptions not used in this case
+	@throw when the marker fails boundary checks
+*/
 void Stack::deallocate(Marker pos, size_t size, AllocOptions _)
 {
 	this->freeToMarker(pos);
@@ -41,6 +57,10 @@ void * Stack::alloc(size_t size)
 	}
 }
 
+/*
+	get the current location of the top marker
+	@return Marker the current top (points to free memory)
+*/
 Marker Stack::getTop()
 {
 	return this->top;
