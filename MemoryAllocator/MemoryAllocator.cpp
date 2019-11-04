@@ -21,12 +21,17 @@ using namespace std;
 
 
 //TODO: flesh out these definitions ----------------------
-void * memAllocRaw() { return nullptr; }
+void * memAllocRaw(size_t size, AllocOptions options = DEFAULT) { return MemoryManager::getInstance().allocate(size, options); }
 
-void memFreeRaw() {}
+void memFreeRaw(void * address, size_t size, AllocOptions options = DEFAULT) {
+	Marker m = reinterpret_cast<Marker>(address);
+	MemoryManager::getInstance().deallocate(m, size, options);
+}
 
 template<template<class> class SmartPointer,class T>
-inline SmartPointer<T> memAllocSmart() {}
+inline SmartPointer<T> memAllocSmart(AllocOptions options = DEFAULT) {
+	return MemoryManager::getInstance().smartAllocate<SmartPointer, T>(options);
+}
 //-------------------------------------------------------
 
 
@@ -401,6 +406,7 @@ void testPoolAddressNotOnBlockBoundary() {
 }
 
 //-------------------------------------------------
+
 /*
 	smart pointer integration test
 */
@@ -446,6 +452,7 @@ void testSmartPointerDStackTopDeallocate(){
 }
 
 //-------------------------------------------------
+
 /*
 	memory manager stack integration test
 */
@@ -572,7 +579,6 @@ void testMemoryManagerOutOfMemory() {
 		 
 }
 
-
 /*
 	memory manager bad initialisation test
 */
@@ -586,7 +592,12 @@ void testMemoryManagerNoInit() {
 
 }
 
+//todo
+void testGlobalAlloc() {}
 
+void testGlobalFree() {}
+
+void testGlobalSmartAlloc() {}
 
 
 int main()
