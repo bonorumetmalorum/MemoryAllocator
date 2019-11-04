@@ -221,6 +221,26 @@ void testDStackConstructionError() {
 		cout << e << endl;
 	}
 }
+
+void testDoubleEndedStackMeetInTheMiddle() {
+	DoubleEndedStack dst(sizeof(Vertex)*2);
+	Vertex * v1 = (Vertex*)dst.allocate(sizeof(Vertex), BOTTOM);
+	Vertex * v2 = (Vertex*)dst.allocate(sizeof(Vertex), TOP);
+	v2->x = 5.0;
+	v2->y = 5.0;
+	v2->z = 5.0;
+
+	v1->x = 6.0;
+	v1->y = 6.0;
+	v1->z = 6.0;
+
+	cout << v1->x << " " << v1->y << " " << v1->z << endl;
+	cout << v2->x << " " << v2->y << " " << v2->z << endl;
+
+	cout << v1 << endl;
+	cout << v2 << endl;
+}
+
 //------------------------------------------------
 
 /*
@@ -386,7 +406,7 @@ void testPoolAddressNotOnBlockBoundary() {
 */
 void testSmartPointer() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
-	SmartPointer<int> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
+	SmartPointer<int> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, int>();
 	SmartPointer<int>pointer2 = pointer;
 	cout << pointer.getCounter() << endl;
 }
@@ -396,7 +416,7 @@ void testSmartPointer() {
 */
 void testSmartPointerAccess() {
 	MemoryManager::getInstance().init(new Pool(sizeof(Vertex), 100), 100);
-	SmartPointer<Vertex> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
+	SmartPointer<Vertex> pointer = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>();
 	SmartPointer<Vertex> pointer2 = pointer;
 	*pointer2 = Vertex{2.0, 2.0, 2.0};
 	cout << (*pointer2).x << (*pointer).y << (*pointer).z << endl;
@@ -408,7 +428,7 @@ void testSmartPointerAccess() {
 void testSmartPointerDelete() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
 	{
-		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
+		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>();
 	}
 }
 
@@ -418,10 +438,10 @@ void testSmartPointerDelete() {
 void testSmartPointerDStackTopDeallocate(){
 	MemoryManager::getInstance().init(new DoubleEndedStack(100), 100);
 	{
-		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int), TOP);
+		SmartPointer<int> p = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(TOP);
 		cout << p << endl;
 	}
-	SmartPointer<int> e = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int), TOP);
+	SmartPointer<int> e = MemoryManager::getInstance().smartAllocate<SmartPointer, int>(TOP);
 	cout << e << endl;
 }
 
@@ -506,7 +526,7 @@ void testMemoryManagerPool() {
 */
 void testMemoryManagerSmartAllocate() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
-	SmartPointer<Vertex> s = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
+	SmartPointer<Vertex> s = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>();
 	(*s).x = 1.0;
 	(*s).y = 2.0;
 	(*s).z = 3.0;
@@ -514,7 +534,7 @@ void testMemoryManagerSmartAllocate() {
 
 	cout << sizeof(SmartPointer<Vertex>) << " " << sizeof(SmartPointer<int>) << endl;
 
-	SmartPointer<Vertex> t = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>(sizeof(Vertex));
+	SmartPointer<Vertex> t = MemoryManager::getInstance().smartAllocate<SmartPointer, Vertex>();
 	(*t).x = 6.0;
 	(*t).y = 6.0;
 	(*t).z = 6.0;
@@ -527,9 +547,9 @@ void testMemoryManagerSmartAllocate() {
 */
 void testMemoryManagerSmartPointerRcOutOfSpace() {
 	MemoryManager::getInstance().init(new Stack(100), 1);
-	SmartPointer<char> a = MemoryManager::getInstance().smartAllocate<SmartPointer, char>(sizeof(char));
+	SmartPointer<char> a = MemoryManager::getInstance().smartAllocate<SmartPointer, char>();
 	try {
-		SmartPointer<char> b = MemoryManager::getInstance().smartAllocate<SmartPointer, char>(sizeof(char));
+		SmartPointer<char> b = MemoryManager::getInstance().smartAllocate<SmartPointer, char>();
 	}
 	catch(const char * e){
 		cout << e << endl;
@@ -558,7 +578,7 @@ void testMemoryManagerOutOfMemory() {
 */
 void testMemoryManagerNoInit() {
 	try {
-		MemoryManager::getInstance().smartAllocate<SmartPointer, int>(sizeof(int));
+		MemoryManager::getInstance().smartAllocate<SmartPointer, int>();
 	}
 	catch (const char * e) {
 		cout << e << endl;
@@ -592,6 +612,8 @@ int main()
 	//testDStackInvalidMarker();
 
 	//testDStackConstructionError();
+
+	//testDoubleEndedStackMeetInTheMiddle();
 
 	//-------------------------------
 

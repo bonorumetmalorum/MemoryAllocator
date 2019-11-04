@@ -47,7 +47,8 @@ private:
 template<template<class> class SmartPointer, typename T>
 SmartPointer<T> MemoryManager::smartAllocate(AllocOptions options)
 {
-	T * address = (T*)this->allocate(sizeof(T), options);
+	size_t size = sizeof(T);
+	T * address = (T*)this->allocate(size, options);
 	try {
 		void* ptr = this->pointerStorage->allocate(size);
 		int* rc = (int*)this->rcStorage->allocate(size);
