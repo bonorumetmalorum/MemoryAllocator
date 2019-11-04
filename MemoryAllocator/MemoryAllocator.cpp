@@ -593,11 +593,24 @@ void testMemoryManagerNoInit() {
 }
 
 //todo
-void testGlobalAlloc() {}
+void testGlobalAlloc() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	Vertex * address = (Vertex*)memAllocRaw(sizeof(Vertex));
+	*address = Vertex{ 1.0,1.0,1.0 };
+}
 
-void testGlobalFree() {}
+void testGlobalFree() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	Vertex * address = (Vertex*)memAllocRaw(sizeof(Vertex));
+	*address = Vertex{ 1.0,1.0,1.0 };
+	memFreeRaw(address, sizeof(Vertex));
+}
 
-void testGlobalSmartAlloc() {}
+void testGlobalSmartAlloc() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex> address = memAllocSmart<SmartPointer, Vertex>();
+	*address = Vertex{ 1.0,1.0,1.0 };
+}
 
 
 int main()
@@ -670,6 +683,11 @@ int main()
 
 	//testMemoryManagerOutOfMemory();
 
+	//testGlobalAlloc();
+
+	//testGlobalFree();
+
+	//testGlobalSmartAlloc();
 
 	return 0;
 }
