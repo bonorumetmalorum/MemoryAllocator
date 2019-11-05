@@ -8,26 +8,36 @@
 #include <iostream>
 #include "MemoryAllocator.h"
 
-/*
-	TODO:
-
-	make allocators using placement operator in memory manager
-		you will need to allocate the capacity + the size of the allocator
-	allignment
-		make seperate functions for allignment
-*/
-
 using namespace std;
 
-
-//TODO: flesh out these definitions ----------------------
+//-------------------------------------------------------
+/*
+	global function to allocate raw memory
+	@param size size of memory wanting to be allocated
+	@param options options to be used with the specific allocation strategy chosen to be used with the memory manager
+	@return void * address of allocated memory
+	@throws if the memory manager is not properly initialised or out of memory
+*/
 void * memAllocRaw(size_t size, AllocOptions options = DEFAULT) { return MemoryManager::getInstance().allocate(size, options); }
 
+/*
+	global function to deallocate memory
+	@param address the location in memory to deallocate
+	@param size the amount of memory to deallocate
+	@options options to be used with the specific allocation strategy chosen to be used with the memory manager
+	@throws if the memory manager is not properly initialised or the address fails boundary checks or is invalid
+*/
 void memFreeRaw(void * address, size_t size, AllocOptions options = DEFAULT) {
 	Marker m = reinterpret_cast<Marker>(address);
 	MemoryManager::getInstance().deallocate(m, size, options);
 }
 
+/*
+	global function to allocate typed memory
+	@param options options to be used with the specific allocation strategy chosen to be used with the memory manager
+	@return SmartPointer<T> the smartpointer of the provided type to allocated memory address
+	@throws if the memory manager is not properly initialised or out of memory
+*/
 template<template<class> class SmartPointer,class T>
 inline SmartPointer<T> memAllocSmart(AllocOptions options = DEFAULT) {
 	return MemoryManager::getInstance().smartAllocate<SmartPointer, T>(options);
