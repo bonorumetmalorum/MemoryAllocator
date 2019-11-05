@@ -52,7 +52,7 @@ struct Vertex {
 };
 
 //-------------------------------------------------
-/**
+/*
 	Stack integration test
 */
 void testStack() {
@@ -72,7 +72,7 @@ void testStack() {
 	cout << "vert: " << vert->x << " " << vert->y << " " << vert->z << " newVert: " << newVert->x << " " << newVert->y << " " << newVert->z << endl;
 }
 
-/**
+/*
 	Stack out of memory test
 */
 void testStackFull() {
@@ -92,7 +92,7 @@ void testStackFull() {
 	}
 }
 
-/**
+/*
 	Stack bad construction test
 */
 void testBadStackConstruction() {
@@ -104,7 +104,7 @@ void testBadStackConstruction() {
 	}
 }
 
-/**
+/*
 	Stack construction test
 */
 void testStackConstruction() {
