@@ -602,7 +602,6 @@ void testMemoryManagerNoInit() {
 
 }
 
-//todo
 void testGlobalAlloc() {
 	MemoryManager::getInstance().init(new Stack(100), 100);
 	Vertex * address = (Vertex*)memAllocRaw(sizeof(Vertex));
@@ -674,8 +673,6 @@ int main()
 	//testSmartPointerDelete();
 
 	//testSmartPointerDStackTopDeallocate();
-
-	//testSmartPointerDoubleFree(); //check it again TODO
 
 	//-----------------------------------
 
