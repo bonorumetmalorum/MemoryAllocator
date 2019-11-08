@@ -15,7 +15,9 @@ public:
 	SmartPointer(const SmartPointer& other);
 	SmartPointer& operator=(SmartPointer& other);
 	T & operator *();
-	//implement other operators [], ++, --
+	void operator++();
+	T& operator[](int i);
+	T* operator->();
 	friend std::ostream& operator <<(std::ostream& os, const SmartPointer& ptr) {
 		os << ptr.rawAddress;
 		return os;
@@ -97,6 +99,24 @@ template<class T>
 inline T & SmartPointer<T>::operator*()
 {
 	return *rawAddress;
+}
+
+template<class T>
+inline void SmartPointer<T>::operator++()
+{
+	rawAddress++;
+}
+
+template<class T>
+inline T & SmartPointer<T>::operator[](int i)
+{
+	rawAddress[i];
+}
+
+template<class T>
+inline T * SmartPointer<T>::operator->()
+{
+	return rawAddress;
 }
 
 /*
