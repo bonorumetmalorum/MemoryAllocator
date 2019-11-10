@@ -6,10 +6,13 @@
 	Construct a pool allocator
 	@param sizeOfElement the block size
 	@param numElements the number of blocks
-	@throws when malloc fails
+	@throws when malloc fails or when the block size is invalid
 */
 Pool::Pool(size_t sizeOfElement, int numElements)
 {
+	if (sizeOfElement <= 0) {
+		throw "invalid block size";
+	}
 	if (sizeOfElement < sizeof(Marker)) {
 		memory = malloc(sizeof(Marker)*numElements);
 		this->sizeOfBlock = sizeof(Marker);
