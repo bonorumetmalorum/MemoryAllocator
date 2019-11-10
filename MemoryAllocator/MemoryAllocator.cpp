@@ -779,7 +779,7 @@ int main()
 
 	//testSmartPointerDStackTopDeallocate();
 	
-	testSmartPointerMemberAccess();
+	//testSmartPointerMemberAccess();
 
 	//-----------------------------------
 
