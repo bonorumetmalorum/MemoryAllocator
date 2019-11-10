@@ -531,6 +531,15 @@ void testSmartPointerDStackTopDeallocate(){
 	cout << e << endl;
 }
 
+void testSmartPointerMemberAccess() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex> vert = memAllocSmart<SmartPointer, Vertex>();
+	vert->x = 1.0f;
+	vert->y = 2.0f;
+	vert->z = 3.0f;
+	assert(vert->x == 1.0f && vert->y == 2.0f && vert->z == 3.0f);
+}
+
 //-------------------------------------------------
 
 /*
@@ -769,6 +778,8 @@ int main()
 	//testSmartPointerDelete();
 
 	//testSmartPointerDStackTopDeallocate();
+	
+	testSmartPointerMemberAccess();
 
 	//-----------------------------------
 
