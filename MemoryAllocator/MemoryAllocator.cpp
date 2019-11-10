@@ -461,6 +461,37 @@ void testSmartPointerDStackTopDeallocate(){
 	cout << e << endl;
 }
 
+void testSmartPointerAddition() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex> vert = memAllocSmart<SmartPointer, Vertex>();
+	cout << vert << endl;
+	vert++;
+	cout << vert << endl;
+}
+
+void testSmartPointerMemberAccess() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex> vert = memAllocSmart<SmartPointer, Vertex>();
+	vert->x = 1.0f;
+	vert->y = 2.0f;
+	vert->z = 3.0f;
+}
+
+void testSmartPointerArrayAccess() {
+	MemoryManager::getInstance().init(new Stack(100), 100);
+	SmartPointer<Vertex[3]> vertArray = memAllocSmart<SmartPointer, Vertex[3]>();
+	vertArray[0]->x = 1.0;
+	vertArray[0]->y = 1.0;
+	vertArray[0]->z = 1.0;
+
+	vertArray[1]->x = 1.0;
+	vertArray[1]->y = 1.0;
+	vertArray[1]->z = 1.0;
+
+	vertArray[2]->x = 1.0;
+	vertArray[2]->y = 1.0;
+	vertArray[2]->z = 1.0;
+}
 //-------------------------------------------------
 
 /*
